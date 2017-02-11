@@ -1,4 +1,5 @@
 from .views import APIView
+from . import mixins
 
 
 __all__ = ['ViewSet', 'ApiViewSet']
@@ -35,4 +36,16 @@ class ViewSetMixin:
 
 
 class ApiViewSet(ViewSetMixin, APIView):
+    pass
+
+
+class CrudViewSet(mixins.CreateMixin,
+                  mixins.RetrieveMixin,
+                  mixins.UpdateMixin,
+                  mixins.DestroyMixin,
+                  mixins.ListMixin,
+                  ApiViewSet):
+    """
+    Allows all the CRUD actions to be mapped to a single class.
+    """
     pass
