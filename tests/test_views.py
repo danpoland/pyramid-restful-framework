@@ -1,5 +1,3 @@
-import pytest
-
 from pyramid import testing
 from pyramid.response import Response
 
@@ -8,13 +6,10 @@ from unittest import TestCase
 from pyramid_restful.views import APIView
 
 
-class GetView(APIView):
+class TestView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({'method': 'GET'})
-
-
-class PostView(APIView):
 
     def post(self, request, *args, **kwargs):
         return Response({'method': 'POST', 'data': request.body})
@@ -35,48 +30,41 @@ class ExceptionView(APIView):
 class APIViewTests(TestCase):
 
     def setUp(self):
-        self.get_view = GetView.as_view()
-        self.post_view = PostView.as_view()
-        self.init_view = InitKwargsView.as_view(name='test')
+        self.test_view = TestView.as_view(name='TestView')
 
     def test_implemented_method_dispatch(self):
         request = testing.DummyRequest()
-        response = self.get_view(request)
+        response = self.test_view(request)
         expected = {'method': 'GET'}
         assert response.status_code == 200
         assert response.body == expected
 
     def test_method_not_allowed(self):
-        request = testing.DummyRequest(post={'data': 'testing'})
-        response = self.get_view(request)
+        request = testing.DummyRequest()
+        request.method = 'PUT'
+        response = self.test_view(request)
         assert response.status_code == 405
 
-    def test_allowed_methods(self):
-        view = GetView()
-        expected = ['GET', 'OPTIONS']
-        assert expected == view.allowed_methods
-
     def test_initkwargs(self):
+        view = InitKwargsView.as_view(name='test')
         request = testing.DummyRequest()
-        response = self.init_view(request)
+        response = view(request)
         expected = {'name': 'test'}
         assert response.body == expected
 
     def test_raises_exception(self):
-        view = ExceptionView().as_view()
+        view = ExceptionView.as_view()
         request = testing.DummyRequest()
         self.assertRaises(Exception, view, request)
 
     def test_invalid_method_exception(self):
-        view = self.get_view
         request = testing.DummyRequest()
         request.method = 'PUTZ'
-        response = view(request)
+        response = self.test_view(request)
         assert response.status_code == 405
 
-    def test_options(self):
-        view = self.get_view
+    def test_options_request(self):
         request = testing.DummyRequest()
         request.method = 'OPTIONS'
-        response = view(request)
-        assert response.headers.get('Allow') == ['GET', 'OPTIONS']
+        response = self.test_view(request)
+        assert response.headers.get('Allow') == ['GET', 'POST', 'OPTIONS']
