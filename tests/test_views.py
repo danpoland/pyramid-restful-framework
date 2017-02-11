@@ -66,3 +66,17 @@ class APIViewTests(TestCase):
         view = ExceptionView().as_view()
         request = testing.DummyRequest()
         self.assertRaises(Exception, view, request)
+
+    def test_invalid_method_exception(self):
+        view = self.get_view
+        request = testing.DummyRequest()
+        request.method = 'PUTZ'
+        response = view(request)
+        assert response.status_code == 405
+
+    def test_options(self):
+        view = self.get_view
+        request = testing.DummyRequest()
+        request.method = 'OPTIONS'
+        response = view(request)
+        assert response.headers.get('Allow') == ['GET', 'OPTIONS']
