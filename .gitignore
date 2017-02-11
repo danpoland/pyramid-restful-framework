@@ -1,0 +1,8 @@
+*.pyc
+venv/
+*.egg-info/
+dist/
+.*
+
+!.gitignore
+!.travis.yml
