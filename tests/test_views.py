@@ -6,7 +6,7 @@ from unittest import TestCase
 from pyramid_restful.views import APIView
 
 
-class TestView(APIView):
+class MyView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({'method': 'GET'})
@@ -30,7 +30,7 @@ class ExceptionView(APIView):
 class APIViewTests(TestCase):
 
     def setUp(self):
-        self.test_view = TestView.as_view(name='TestView')
+        self.test_view = MyView.as_view(name='MyView')
 
     def test_implemented_method_dispatch(self):
         request = testing.DummyRequest()
