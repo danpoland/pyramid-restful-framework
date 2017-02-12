@@ -59,3 +59,19 @@ class ViewSetRouterUnitTests(TestCase):
                   name='{basename}-detail-route', initkwargs={})]
 
         assert routes == expected
+
+    def test_get_lookup(self):
+        viewset = MyCrudViewSet()
+        lookup = self.router.get_lookup(viewset)
+        assert lookup == '{pk}'
+
+        viewset = MyCrudViewSet()
+        viewset.lookup_field = 'id'
+        lookup = self.router.get_lookup(viewset)
+        assert lookup == '{id}'
+
+        viewset = MyCrudViewSet()
+        viewset.lookup_url_kwarg = 'uuid'
+        lookup = self.router.get_lookup(viewset)
+        assert lookup == '{uuid}'
+
