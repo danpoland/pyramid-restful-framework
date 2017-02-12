@@ -29,7 +29,7 @@ class APIView:
             self.request = request
             self.url_lookup_kwargs = self.request.matchdict
 
-            return self.dispatch(self.request, **self.request.matchdict)
+            return self.dispatch(self.request, **self.url_lookup_kwargs)
 
         return view
 
