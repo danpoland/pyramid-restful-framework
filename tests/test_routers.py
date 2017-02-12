@@ -3,15 +3,17 @@ from unittest.mock import MagicMock, patch
 
 from pyramid.config import Configurator
 
-from pyramid_restful.routers import ViewSetRouter
+from pyramid_restful.routers import ViewSetRouter, Route
 from pyramid_restful.viewsets import CrudViewSet
 
 
-class ViewSetRouterUnitTests(TestCase):
+class MyCrudViewSet(CrudViewSet):
+    pass
 
+
+class ViewSetRouterUnitTests(TestCase):
     def setUp(self):
         self.config = MagicMock(spec=Configurator)
-        self.mock_viewset = MagicMock(spec=CrudViewSet)
         self.router = ViewSetRouter(self.config)
 
     # def viewsetrouter_test(self):
@@ -22,7 +24,38 @@ class ViewSetRouterUnitTests(TestCase):
     #
     #     router
 
-    def get_routes_test(self):
-        routes = self.router.get_routes(self.mock_viewset)
-        expected = {}
+    def test_get_routes(self):
+        viewset = MyCrudViewSet()
+
+        # add mock detail_route and list_route methods
+
+        def detail_route():
+            pass
+
+        viewset.detail_route = detail_route
+        viewset.detail_route.bind_to_methods = ['GET']
+        viewset.detail_route.kwargs = {}
+        viewset.detail_route.detail = True
+
+        def list_route():
+            pass
+
+        viewset.list_route = list_route
+        viewset.list_route.bind_to_methods = ['GET']
+        viewset.list_route.kwargs = {}
+        viewset.list_route.detail = False
+
+        routes = self.router.get_routes(viewset)
+
+        expected = [
+            Route(url='/{prefix}{trailing_slash}', mapping={'get': 'list', 'post': 'create'}, name='{basename}-list',
+                  initkwargs={}),
+            Route(url='/{prefix}/list_route{trailing_slash}', mapping={'get': 'list_route'},
+                  name='{basename}-list-route', initkwargs={}),
+            Route(url='/{prefix}/{lookup}{trailing_slash}',
+                  mapping={'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'},
+                  name='{basename}-detail', initkwargs={}),
+            Route(url='/{prefix}/{lookup}/detail_route{trailing_slash}', mapping={'get': 'detail_route'},
+                  name='{basename}-detail-route', initkwargs={})]
+
         assert routes == expected
