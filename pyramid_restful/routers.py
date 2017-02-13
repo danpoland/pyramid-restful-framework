@@ -176,7 +176,18 @@ class ViewSetRouter:
     def get_lookup(self, viewset):
         base_regex = '{%s}'
         lookup_field = getattr(viewset, 'lookup_field', 'pk')
-        lookup_url_kwarg = getattr(viewset, 'lookup_url_kwarg', None) or lookup_field
+        lookup_url_kwargs = getattr(viewset, 'lookup_url_kwarg', None)
+
+        if lookup_url_kwargs:
+            lookup_url_keys = list(lookup_url_kwargs)
+
+            if len(lookup_url_keys) > 1:
+                raise ImproperlyConfigured('ViewSetRouter does not support nested routes.')
+
+            lookup_url_kwarg = lookup_url_keys[0]
+        else:
+            lookup_url_kwarg = lookup_field
+
         return base_regex % lookup_url_kwarg
 
     def get_method_map(self, viewset, method_map):

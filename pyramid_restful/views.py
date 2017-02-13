@@ -16,7 +16,7 @@ class APIView:
     """
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
-    lookup_url_kwarg = None
+    lookup_url_kwargs = None
 
     def __init__(self, **kwargs):
         for key, val in kwargs.items():
@@ -27,9 +27,9 @@ class APIView:
         def view(request):
             self = cls(**initkwargs)
             self.request = request
-            self.url_lookup_kwargs = self.request.matchdict
+            self.lookup_url_kwargs = self.request.matchdict
 
-            return self.dispatch(self.request, **self.url_lookup_kwargs)
+            return self.dispatch(self.request, **self.lookup_url_kwargs)
 
         return view
 

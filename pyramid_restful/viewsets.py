@@ -23,14 +23,14 @@ class ViewSetMixin:
         def view(request):
             self = cls(**initkwargs)
             self.request = request
-            self.url_lookup_kwargs = self.request.matchdict
+            self.lookup_url_kwargs = self.request.matchdict
             self.action_map = action_map
 
             for method, action in action_map.items():
                 handler = getattr(self, action)
                 setattr(self, method, handler)
 
-            return self.dispatch(self.request, **self.request.matchdict)
+            return self.dispatch(self.request, **self.lookup_url_kwargs)
 
         return view
 
