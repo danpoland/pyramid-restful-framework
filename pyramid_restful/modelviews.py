@@ -7,11 +7,11 @@ from sqlalchemy.orm.exc import NoResultFound
 
 class ModelAPIView(APIView):
 
-    model = None  # SQLAlchemy model class
-    schema_class = None  # marshmallow schema class
-    filter_fields = None  # list of Column objects
+    model = None                # SQLAlchemy model class
+    schema_class = None         # marshmallow schema class
+    filter_fields = None        # list of Column objects
     lookup_column = 'id'
-    pagination_class = None  # todo make default configurable
+    pagination_class = None     # todo make default configurable
 
     def get_query(self):
         assert self.model is not None, (
@@ -28,12 +28,12 @@ class ModelAPIView(APIView):
         # If query joins more than one table lookup_column must be a
         # tuple of the model class and a string of the column name.
 
-        if isinstance(self.lookup_column, Column):
-            lookup_col = self.lookup_column
-            lookup_val = self.url_lookup_kwargs[self.lookup_column.name]
+        if isinstance(self.lookup_column, str):
+            lookup_col = Column(self.lookup_column)
+            lookup_val = self.url_lookup_kwargs[self.lookup_column]
         else:
             assert isinstance(self.lookup_column, tuple), (
-                "'%s' `lookup_column` attribute should be a tuple of (<model class>, `column`) "
+                "'%s' `lookup_column` attribute should be a string or a tuple of (<model class>, `column`) "
                 % self.__class__.__name__
             )
 

@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 from pyramid.config import Configurator
 
 from pyramid_restful.routers import ViewSetRouter, Route
-from pyramid_restful.viewsets import CrudViewSet, ApiViewSet
+from pyramid_restful.viewsets import CrudViewSet, APIViewSet
 from pyramid_restful.exceptions import ImproperlyConfigured
 
 
@@ -12,7 +12,7 @@ class MyCrudViewSet(CrudViewSet):
     pass
 
 
-class ReadOnlyViewSet(ApiViewSet):
+class ReadOnlyViewSet(APIViewSet):
 
     def list(self):
         pass
@@ -117,7 +117,7 @@ class ViewSetRouterTests(TestCase):
         assert self.config.add_view.call_count == 2
 
     def test_empty_register(self):
-        viewset = ApiViewSet()
+        viewset = APIViewSet()
         self.config.reset_mock()
         self.router.register('users', viewset, 'user')
         self.config.add_route.assert_not_called()

@@ -3,10 +3,10 @@ from pyramid.response import Response
 
 from unittest import TestCase
 
-from pyramid_restful.viewsets import ApiViewSet, CrudViewSet
+from pyramid_restful.viewsets import APIViewSet, CrudViewSet
 
 
-class MyViewSet(ApiViewSet):
+class MyViewSet(APIViewSet):
 
     def list(self, request, *args, **kwargs):
         return Response({'method': 'GET', 'action': 'list'})
