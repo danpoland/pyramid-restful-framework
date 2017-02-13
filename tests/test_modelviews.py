@@ -10,7 +10,7 @@ from sqlalchemy.orm.query import Query
 
 from marshmallow import Schema, fields
 
-from pyramid_restful.modelviews import ModelAPIView
+from pyramid_restful import modelviews
 
 engine = create_engine('sqlite://')
 Base = declarative_base()
@@ -28,14 +28,14 @@ class UserSchema(Schema):
     name = fields.String()
 
 
-class UserAPIView(ModelAPIView):
+class UserAPIView(modelviews.ModelAPIView):
     model = User
     schema_class = UserSchema
     filter_fields = [User.name]
     pagination_class = mock.Mock()
 
 
-class UserOverrideView(ModelAPIView):
+class UserOverrideView(modelviews.ModelAPIView):
     model = User
     lookup_column = (User, 'id')
 
@@ -86,7 +86,7 @@ class ModelAPIViewUnitTests(TestCase):
         assert isinstance(query, Query)
 
     def test_missing_model(self):
-        view = ModelAPIView()
+        view = modelviews.ModelAPIView()
         view.request = self.request
         self.assertRaises(AssertionError, view.get_query)
 
@@ -162,3 +162,189 @@ class ModelAPIViewUnitTests(TestCase):
         view.request = self.request
         view.get_paginated_response({})
         view.paginator.get_paginated_response.assert_called_once()
+
+
+class ConcreteModelAPIViewsTest(TestCase):
+
+    def test_create_api_view_post(self):
+        class MockCreateApiView(modelviews.CreateAPIView):
+            def create(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockCreateApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.post('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_list_api_view_get(self):
+        class MockListApiView(modelviews.ListAPIView):
+            def list(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockListApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.get('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieve_api_view_get(self):
+        class MockRetrieveApiView(modelviews.RetrieveAPIView):
+            def retrieve(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockRetrieveApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.get('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_destroy_api_view_delete(self):
+        class MockDestroyApiView(modelviews.DestroyAPIView):
+            def destroy(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockDestroyApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.delete('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_update_api_view_partial_update(self):
+        class MockUpdateApiView(modelviews.UpdateAPIView):
+            def partial_update(self, request, *args, **kwargs):
+                self.partial_called = True
+                self.partial_call_args = (request, args, kwargs)
+
+            def update(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockUpdateApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.patch('test request', 'test arg', test_kwarg='test')
+        assert view.partial_called is True
+        assert view.partial_call_args == data
+
+        view.put('test request', 'test arg', test_kwarg='test')
+        assert view.partial_called is True
+        assert view.partial_call_args == data
+
+    def test_listcreate_api_view(self):
+        class MockListCreateApiView(modelviews.ListCreateAPIView):
+            def list(self, request, *args, **kwargs):
+                self.list_called = True
+                self.list_call_args = (request, args, kwargs)
+
+            def create(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockListCreateApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.get('test request', 'test arg', test_kwarg='test')
+        assert view.list_called is True
+        assert view.list_call_args == data
+
+        view.post('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieve_update_api_view_get(self):
+        class MockRetrieveUpdateApiView(modelviews.RetrieveUpdateAPIView):
+            def retrieve(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockRetrieveUpdateApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.get('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieve_update_api_view_put(self):
+        class MockRetrieveUpdateApiView(modelviews.RetrieveUpdateAPIView):
+            def update(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockRetrieveUpdateApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.put('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieve_update_api_view_patch(self):
+        class MockRetrieveUpdateApiView(modelviews.RetrieveUpdateAPIView):
+            def partial_update(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockRetrieveUpdateApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.patch('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieve_destroy_api_view_get(self):
+        class MockRetrieveDestroyUApiView(modelviews.RetrieveDestroyAPIView):
+            def retrieve(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockRetrieveDestroyUApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.get('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieve_destroy_api_view_delete(self):
+        class MockRetrieveDestroyUApiView(modelviews.RetrieveDestroyAPIView):
+            def destroy(self, request, *args, **kwargs):
+                self.called = True
+                self.call_args = (request, args, kwargs)
+
+        view = MockRetrieveDestroyUApiView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.delete('test request', 'test arg', test_kwarg='test')
+        assert view.called is True
+        assert view.call_args == data
+
+    def test_retrieveupdatedestroy_api_view(self):
+        class MockRetrieveUpdateDestroyAPIView(modelviews.RetrieveUpdateDestroyAPIView):
+            def retrieve(self, request, *args, **kwargs):
+                self.r_called = True
+                self.r_call_args = (request, args, kwargs)
+
+            def destroy(self, request, *args, **kwargs):
+                self.d_called = True
+                self.d_call_args = (request, args, kwargs)
+
+            def update(self, request, *args, **kwargs):
+                self.u_called = True
+                self.u_call_args = (request, args, kwargs)
+
+            def partial_update(self, request, *args, **kwargs):
+                self.p_called = True
+                self.p_call_args = (request, args, kwargs)
+
+        view = MockRetrieveUpdateDestroyAPIView()
+        data = ('test request', ('test arg',), {'test_kwarg': 'test'})
+        view.get('test request', 'test arg', test_kwarg='test')
+        view.delete('test request', 'test arg', test_kwarg='test')
+        view.put('test request', 'test arg', test_kwarg='test')
+        view.patch('test request', 'test arg', test_kwarg='test')
+
+        assert view.r_called is True
+        assert view.r_call_args == data
+        assert view.d_called is True
+        assert view.d_call_args == data
+        assert view.u_called is True
+        assert view.u_call_args == data
+        assert view.p_called is True
+        assert view.p_call_args == data
+
