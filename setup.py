@@ -17,6 +17,7 @@ author = 'Daniel Poland'
 author_email = 'danpoland84@gmail.com'
 install_requires = [
     'pyramid',
+    'sqlalchemy'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
