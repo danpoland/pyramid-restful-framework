@@ -1,7 +1,4 @@
 from unittest import TestCase
-from unittest.mock import MagicMock
-
-from pyramid.config import Configurator
 
 from pyramid_restful.decorators import list_route, detail_route
 
