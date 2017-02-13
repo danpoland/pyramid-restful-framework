@@ -2,7 +2,7 @@ from .views import APIView
 from . import mixins
 
 
-__all__ = ['ViewSet', 'ApiViewSet']
+__all__ = ['ViewSetMixin', 'ApiViewSet', 'CrudViewSet']
 
 
 class ViewSetMixin:
@@ -30,7 +30,7 @@ class ViewSetMixin:
                 handler = getattr(self, action)
                 setattr(self, method, handler)
 
-            return self.dispatch(self.request, **self.lookup_url_kwargs)
+            return self.dispatch(self.request, **self.request.matchdict)
 
         return view
 

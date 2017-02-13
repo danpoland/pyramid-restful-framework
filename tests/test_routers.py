@@ -1,17 +1,27 @@
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from pyramid.config import Configurator
 
 from pyramid_restful.routers import ViewSetRouter, Route
-from pyramid_restful.viewsets import CrudViewSet
+from pyramid_restful.viewsets import CrudViewSet, ApiViewSet
+from pyramid_restful.exceptions import ImproperlyConfigured
 
 
 class MyCrudViewSet(CrudViewSet):
     pass
 
 
-class ViewSetRouterUnitTests(TestCase):
+class ReadOnlyViewSet(ApiViewSet):
+
+    def list(self):
+        pass
+
+    def retrieve(self):
+        pass
+
+
+class ViewSetRouterTests(TestCase):
     def setUp(self):
         self.config = MagicMock(spec=Configurator)
         self.router = ViewSetRouter(self.config)
@@ -59,6 +69,20 @@ class ViewSetRouterUnitTests(TestCase):
 
         assert routes == expected
 
+    def test_improperly_configured_dynamic_route(self):
+        viewset = MyCrudViewSet()
+
+        # add mock detail_route and list_route methods
+        def retrieve():
+            pass
+
+        viewset.retrieve = retrieve
+        viewset.retrieve.bind_to_methods = ['GET']
+        viewset.retrieve.kwargs = {}
+        viewset.retrieve.detail = True
+
+        self.assertRaises(ImproperlyConfigured, self.router.get_routes, viewset)
+
     def test_get_lookup(self):
         viewset = MyCrudViewSet()
         lookup = self.router.get_lookup(viewset)
@@ -74,3 +98,27 @@ class ViewSetRouterUnitTests(TestCase):
         lookup = self.router.get_lookup(viewset)
         assert lookup == '{uuid}'
 
+    def test_nested_route(self):
+        viewset = MyCrudViewSet()
+        viewset.lookup_url_kwargs = {'uuid': 1, 'parent_id': 2}
+        self.assertRaises(ImproperlyConfigured, self.router.get_lookup, viewset)
+
+    def test_get_method_map(self):
+        viewset = ReadOnlyViewSet()
+        mapping = self.router.get_method_map(viewset, {'get': 'list', 'post': 'create', 'put': 'update'})
+        assert mapping == {'get': 'list'}
+
+    def test_register(self):
+        viewset = CrudViewSet()
+        self.config.reset_mock()
+        self.router.register('users', viewset, 'user')
+        self.config.add_route.assert_any_call('user-list', '/users/')
+        self.config.add_route.assert_any_call('user-detail', '/users/{pk}/')
+        assert self.config.add_view.call_count == 2
+
+    def test_empty_register(self):
+        viewset = ApiViewSet()
+        self.config.reset_mock()
+        self.router.register('users', viewset, 'user')
+        self.config.add_route.assert_not_called()
+        self.config.add_route.assert_not_called()
