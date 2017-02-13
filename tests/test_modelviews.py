@@ -234,7 +234,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.partial_called is True
         assert view.partial_call_args == data
 
-    def test_listcreate_api_view(self):
+    def test_list_create_api_view(self):
         class MockListCreateApiView(modelviews.ListCreateAPIView):
             def list(self, request, *args, **kwargs):
                 self.list_called = True
@@ -314,7 +314,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.called is True
         assert view.call_args == data
 
-    def test_retrieveupdatedestroy_api_view(self):
+    def test_retrieve_update_destroy_api_view(self):
         class MockRetrieveUpdateDestroyAPIView(modelviews.RetrieveUpdateDestroyAPIView):
             def retrieve(self, request, *args, **kwargs):
                 self.r_called = True
@@ -338,7 +338,6 @@ class ConcreteModelAPIViewsTest(TestCase):
         view.delete('test request', 'test arg', test_kwarg='test')
         view.put('test request', 'test arg', test_kwarg='test')
         view.patch('test request', 'test arg', test_kwarg='test')
-
         assert view.r_called is True
         assert view.r_call_args == data
         assert view.d_called is True
