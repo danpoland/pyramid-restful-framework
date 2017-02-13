@@ -4,14 +4,15 @@ from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy import Column
 from sqlalchemy.orm.exc import NoResultFound
 
+__all__ = ['ModelAPIView']
+
 
 class ModelAPIView(APIView):
-
-    model = None                # SQLAlchemy model class
-    schema_class = None         # marshmallow schema class
-    filter_fields = None        # list of Column objects
+    model = None  # SQLAlchemy model class
+    schema_class = None  # marshmallow schema class
+    filter_fields = None  # list of Column objects
     lookup_column = 'id'
-    pagination_class = None     # todo make default configurable
+    pagination_class = None  # todo make default configurable
 
     def get_query(self):
         assert self.model is not None, (
