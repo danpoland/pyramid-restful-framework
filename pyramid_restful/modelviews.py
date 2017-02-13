@@ -47,10 +47,6 @@ class ModelAPIView(APIView):
 
         return instance
 
-    def get_schema(self, *args, **kwargs):
-        klass = self.get_schema_class()
-        return klass(*args, **kwargs, context=dict(request=self.request))
-
     def get_schema_class(self):
         """
         Return the class to use for the serializer.
@@ -67,6 +63,10 @@ class ModelAPIView(APIView):
         )
 
         return self.schema_class
+
+    def get_schema(self, *args, **kwargs):
+        klass = self.get_schema_class()
+        return klass(*args, **kwargs, context=dict(request=self.request))
 
     def filter_query(self, query):
         filter_list = []
