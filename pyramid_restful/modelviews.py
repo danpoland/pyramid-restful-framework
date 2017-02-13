@@ -20,7 +20,7 @@ class ModelAPIView(APIView):
             % self.__class__.__name__
         )
 
-        return self.db_session.query(self.model)
+        return self.request.dbsession.query(self.model)
 
     def get_object(self):
         query = self.filter_query(self.get_query())
