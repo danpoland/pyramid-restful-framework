@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
@@ -32,6 +32,7 @@ class UserAPIView(ModelAPIView):
     model = User
     schema_class = UserSchema
     filter_fields = [User.name]
+    pagination_class = mock.Mock()
 
 
 class UserOverrideView(ModelAPIView):
@@ -99,7 +100,7 @@ class ModelAPIViewUnitTests(TestCase):
         assert instance.name == 'testing'
 
     def test_get_object_override(self):
-        view = UserAPIView()
+        view = UserOverrideView()
         view.request = self.request
         view.url_lookup_kwargs = {'id': 1}
         instance = view.get_object()
@@ -129,7 +130,7 @@ class ModelAPIViewUnitTests(TestCase):
 
     def test_filter_query(self):
         view = UserAPIView()
-        self.request.params = {'name': 'testing'}
+        self.request.params = {'name': 'testing', 'id': 3}
         view.request = self.request
         results = view.filter_query(view.get_query()).all()
         assert len(results) == 1
@@ -141,3 +142,23 @@ class ModelAPIViewUnitTests(TestCase):
         view.request = self.request
         results = view.filter_query(view.get_query()).all()
         assert len(results) == 0
+
+    def test_paginate_query(self):
+        view = UserAPIView()
+        view.request = self.request
+        query = view.get_query()
+
+        view.paginate_query(query)
+        view.paginator.paginate_query.assert_called_once()
+
+    def test_no_paginator(self):
+        view = UserOverrideView()
+        view.request = self.request
+        query = view.get_query()
+        assert view.paginate_query(query) == None
+
+    def test_get_paginated_response(self):
+        view = UserAPIView()
+        view.request = self.request
+        view.get_paginated_response({})
+        view.paginator.get_paginated_response.assert_called_once()
