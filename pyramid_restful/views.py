@@ -27,9 +27,9 @@ class APIView:
         def view(request):
             self = cls(**initkwargs)
             self.request = request
-            self.lookup_url_kwarg = next(iter(self.request.matchdict.keys())) if self.request.matchdict else None  #TODO need to make sure test
+            self.url_lookup_kwargs = self.request.matchdict
 
-            return self.dispatch(self.request, **self.request.matchdict)
+            return self.dispatch(self.request, **self.url_lookup_kwargs)
 
         return view
 
