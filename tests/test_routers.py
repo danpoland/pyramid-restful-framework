@@ -28,7 +28,6 @@ class ViewSetRouterUnitTests(TestCase):
         viewset = MyCrudViewSet()
 
         # add mock detail_route and list_route methods
-
         def detail_route():
             pass
 
@@ -71,7 +70,7 @@ class ViewSetRouterUnitTests(TestCase):
         assert lookup == '{id}'
 
         viewset = MyCrudViewSet()
-        viewset.lookup_url_kwarg = 'uuid'
+        viewset.lookup_url_kwargs = {'uuid': 1}
         lookup = self.router.get_lookup(viewset)
         assert lookup == '{uuid}'
 
