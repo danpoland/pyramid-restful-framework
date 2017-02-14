@@ -38,98 +38,6 @@ class EmptyPage(InvalidPage):
     pass
 
 
-class PageNumberPagination(BasePagination):
-    """
-    A simple page number based style that supports page numbers as
-    query parameters. For example:
-
-    http://api.example.org/accounts/?page=4
-    http://api.example.org/accounts/?page=4&page_size=100
-    """
-
-    page_size = 100  # todo make configurable
-
-    # Client can control the page using this query parameter.
-    page_query_param = 'page'
-
-    # Client can control the page size using this query parameter.
-    # Default is 'None'. Set to eg 'page_size' to enable usage.
-    page_size_query_param = None
-
-    # Set to an integer to limit the maximum page size the client may request.
-    # Only relevant if 'page_size_query_param' has also been set.
-    max_page_size = None
-
-    last_page_strings = ('last',)
-
-    invalid_page_message = 'Invalid page "{page_number}": {message}.'
-
-    def paginate_query(self, data, request):
-        self.request = request
-        page_size = self.get_page_size(request)
-
-        if not page_size:
-            return None
-
-        page_number = request.params.get(self.page_query_param, 1)
-        paginator = Paginator(data, page_size)
-
-        if page_number in self.last_page_strings:
-            page_number = paginator.num_pages
-
-        try:
-            self.page = paginator.page(page_number)
-        except InvalidPage as exc:
-            msg = self.invalid_page_message.format(
-                page_number=page_number, message=six.text_type(exc)
-            )
-            raise HTTPNotFound(msg)
-
-        return list(self.page)
-
-    def get_paginated_response(self, data):
-        return Response(json=OrderedDict([
-            ('count', self.page.paginator.count),
-            ('next', self.get_next_link()),
-            ('previous', self.get_previous_link()),
-            ('results', data)
-        ]))
-
-    def get_page_size(self, request):
-        if self.page_size_query_param:
-            try:
-                return _positive_int(
-                    request.query_params[self.page_size_query_param],
-                    strict=True,
-                    cutoff=self.max_page_size
-                )
-            except (KeyError, ValueError):
-                pass
-
-        return self.page_size
-
-    def get_next_link(self):
-        if not self.page.has_next():
-            return None
-
-        url = self.request.current_route_url()
-        page_number = self.page.next_page_number()
-
-        return replace_query_param(url, self.page_query_param, page_number)
-
-    def get_previous_link(self):
-        if not self.page.has_previous():
-            return None
-
-        url = self.request.current_route_url()
-        page_number = self.page.previous_page_number()
-
-        if page_number == 1:
-            return remove_query_param(url, self.page_query_param)
-
-        return replace_query_param(url, self.page_query_param, page_number)
-
-
 class Paginator(object):
     """
     Thanks Django!
@@ -280,3 +188,97 @@ class Page(Sequence):
         if self.number == self.paginator.num_pages:
             return self.paginator.count
         return self.number * self.paginator.per_page
+
+
+class PageNumberPagination(BasePagination):
+    """
+    A simple page number based style that supports page numbers as
+    query parameters. For example:
+
+    http://api.example.org/accounts/?page=4
+    http://api.example.org/accounts/?page=4&page_size=100
+    """
+
+    page_size = 100  # todo make configurable
+
+    paginator_class = Paginator
+
+    # Client can control the page using this query parameter.
+    page_query_param = 'page'
+
+    # Client can control the page size using this query parameter.
+    # Default is 'None'. Set to eg 'page_size' to enable usage.
+    page_size_query_param = None
+
+    # Set to an integer to limit the maximum page size the client may request.
+    # Only relevant if 'page_size_query_param' has also been set.
+    max_page_size = None
+
+    last_page_strings = ('last',)
+
+    invalid_page_message = 'Invalid page "{page_number}": {message}.'
+
+    def paginate_query(self, data, request):
+        self.request = request
+        page_size = self.get_page_size(request)
+
+        if not page_size:
+            return None
+
+        page_number = request.params.get(self.page_query_param, 1)
+        paginator = self.paginator_class(data, page_size)
+
+        if page_number in self.last_page_strings:
+            page_number = paginator.num_pages
+
+        try:
+            self.page = paginator.page(page_number)
+        except InvalidPage as exc:
+            msg = self.invalid_page_message.format(
+                page_number=page_number, message=six.text_type(exc)
+            )
+            raise HTTPNotFound(msg)
+
+        return list(self.page)
+
+    def get_paginated_response(self, data):
+        return Response(json=OrderedDict([
+            ('count', self.page.paginator.count),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data)
+        ]))
+
+    def get_page_size(self, request):
+        if self.page_size_query_param:
+            try:
+                return _positive_int(
+                    request.params[self.page_size_query_param],
+                    strict=True,
+                    cutoff=self.max_page_size
+                )
+            except (KeyError, ValueError):
+                pass
+
+        return self.page_size
+
+    def get_next_link(self):
+        if not self.page.has_next():
+            return None
+
+        url = self.request.current_route_url()
+        page_number = self.page.next_page_number()
+
+        return replace_query_param(url, self.page_query_param, page_number)
+
+    def get_previous_link(self):
+        if not self.page.has_previous():
+            return None
+
+        url = self.request.current_route_url()
+        page_number = self.page.previous_page_number()
+
+        if page_number == 1:
+            return remove_query_param(url, self.page_query_param)
+
+        return replace_query_param(url, self.page_query_param, page_number)
