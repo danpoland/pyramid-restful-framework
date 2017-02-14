@@ -93,7 +93,7 @@ class ModelAPIViewUnitTests(TestCase):
     def test_get_object(self):
         view = UserAPIView()
         view.request = self.request
-        view.url_lookup_kwargs = {'id': 1}
+        view.lookup_url_kwargs = {'id': 1}
         instance = view.get_object()
         assert isinstance(instance, User)
         assert instance.id == 1
@@ -102,7 +102,7 @@ class ModelAPIViewUnitTests(TestCase):
     def test_get_object_override(self):
         view = UserOverrideView()
         view.request = self.request
-        view.url_lookup_kwargs = {'id': 1}
+        view.lookup_url_kwargs = {'id': 1}
         instance = view.get_object()
         assert isinstance(instance, User)
         assert instance.id == 1
@@ -111,7 +111,7 @@ class ModelAPIViewUnitTests(TestCase):
     def test_get_object_not_found(self):
         view = UserAPIView()
         view.request = self.request
-        view.url_lookup_kwargs = {'id': 3}
+        view.lookup_url_kwargs = {'id': 3}
         self.assertRaises(HTTPNotFound, view.get_object)
 
     def test_get_schema(self):

@@ -86,7 +86,7 @@ class ViewSetRouterTests(TestCase):
     def test_get_lookup(self):
         viewset = MyCrudViewSet()
         lookup = self.router.get_lookup(viewset)
-        assert lookup == '{pk}'
+        assert lookup == '{id}'
 
         viewset = MyCrudViewSet()
         viewset.lookup_field = 'id'
@@ -113,7 +113,7 @@ class ViewSetRouterTests(TestCase):
         self.config.reset_mock()
         self.router.register('users', viewset, 'user')
         self.config.add_route.assert_any_call('user-list', '/users/')
-        self.config.add_route.assert_any_call('user-detail', '/users/{pk}/')
+        self.config.add_route.assert_any_call('user-detail', '/users/{id}/')
         assert self.config.add_view.call_count == 2
 
     def test_empty_register(self):

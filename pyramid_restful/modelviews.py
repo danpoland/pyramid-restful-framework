@@ -33,7 +33,7 @@ class ModelAPIView(APIView):
 
         if isinstance(self.lookup_column, str):
             lookup_col = Column(self.lookup_column)
-            lookup_val = self.url_lookup_kwargs[self.lookup_column]
+            lookup_val = self.lookup_url_kwargs[self.lookup_column]
         else:
             assert isinstance(self.lookup_column, tuple), (
                 "'%s' `lookup_column` attribute should be a string or a tuple of (<model class>, `column`) "
@@ -41,7 +41,7 @@ class ModelAPIView(APIView):
             )
 
             lookup_col = getattr(self.lookup_column[0], self.lookup_column[1])
-            lookup_val = self.url_lookup_kwargs[self.lookup_column[1]]
+            lookup_val = self.lookup_url_kwargs[self.lookup_column[1]]
 
         try:
             instance = query.filter(lookup_col == lookup_val).one()

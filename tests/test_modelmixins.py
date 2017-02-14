@@ -103,7 +103,7 @@ class ModelMixinUnitTests(TestCase):
             pass
 
         view = RetrieveViewTest()
-        response = view.retrieve(self.request, pk=1)
+        response = view.retrieve(self.request, id=1)
         assert response.status_code == 200
         assert response.body == b'{"id":1,"name":"testing"}'
 

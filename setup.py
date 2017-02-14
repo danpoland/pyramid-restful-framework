@@ -8,7 +8,6 @@ import sys
 from io import open
 from setuptools import setup
 
-
 name = 'pyramid-restful'
 package = 'pyramid_restful'
 description = 'RESTful API framework for Pyramid.'
@@ -18,6 +17,12 @@ author_email = 'danpoland84@gmail.com'
 install_requires = [
     'pyramid',
     'sqlalchemy'
+]
+
+tests_require = [
+    'WebTest >= 1.3.1',  # py3 compat
+    'pytest',
+    'pytest-cov',
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -91,6 +96,9 @@ setup(
     packages=get_packages(package),
     package_data=get_package_data(package),
     install_requires=install_requires,
+    extras_require={
+        'testing': tests_require,
+    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',

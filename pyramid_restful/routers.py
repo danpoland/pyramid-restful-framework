@@ -175,7 +175,7 @@ class ViewSetRouter:
 
     def get_lookup(self, viewset):
         base_regex = '{%s}'
-        lookup_field = getattr(viewset, 'lookup_field', 'pk')
+        lookup_field = getattr(viewset, 'lookup_field', 'id')
         lookup_url_kwargs = getattr(viewset, 'lookup_url_kwargs', None)
 
         if lookup_url_kwargs:
