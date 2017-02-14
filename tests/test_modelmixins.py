@@ -37,7 +37,7 @@ class MockAPIView:
         return query
 
     def get_schema(self):
-        def dump(data, *args, many=False, **kwargs):
+        def dump(data, many=False, **kwargs):
             if many:
                 return [{'id': i.id, 'name': i.name} for i in data], ''
 
