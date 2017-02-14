@@ -2,7 +2,7 @@ from .views import APIView
 from . import mixins
 
 
-__all__ = ['ViewSetMixin', 'APIViewSet', 'CrudViewSet']
+__all__ = ['ViewSetMixin', 'APIViewSet', 'CRUDViewSet']
 
 
 class ViewSetMixin:
@@ -39,7 +39,7 @@ class APIViewSet(ViewSetMixin, APIView):
     pass
 
 
-class CrudViewSet(mixins.CreateMixin,
+class CRUDViewSet(mixins.CreateMixin,
                   mixins.RetrieveMixin,
                   mixins.UpdateMixin,
                   mixins.DestroyMixin,

@@ -4,11 +4,11 @@ from unittest.mock import MagicMock
 from pyramid.config import Configurator
 
 from pyramid_restful.routers import ViewSetRouter, Route
-from pyramid_restful.viewsets import CrudViewSet, APIViewSet
+from pyramid_restful.viewsets import CRUDViewSet, APIViewSet
 from pyramid_restful.exceptions import ImproperlyConfigured
 
 
-class MyCrudViewSet(CrudViewSet):
+class MyCRUDViewSet(CRUDViewSet):
     pass
 
 
@@ -29,13 +29,13 @@ class ViewSetRouterTests(TestCase):
     # def viewsetrouter_test(self):
     #     router = ViewSetRouter(self.config)
     #
-    #     with patch.object(CrudViewSet) as viewset:
+    #     with patch.object(CRUDViewSet) as viewset:
     #         router.register('myobjects', viewset, 'myobject')
     #
     #     router
 
     def test_get_routes(self):
-        viewset = MyCrudViewSet()
+        viewset = MyCRUDViewSet()
 
         # add mock detail_route and list_route methods
         def detail_route():
@@ -70,7 +70,7 @@ class ViewSetRouterTests(TestCase):
         assert routes == expected
 
     def test_improperly_configured_dynamic_route(self):
-        viewset = MyCrudViewSet()
+        viewset = MyCRUDViewSet()
 
         # add mock detail_route and list_route methods
         def retrieve():
@@ -84,22 +84,22 @@ class ViewSetRouterTests(TestCase):
         self.assertRaises(ImproperlyConfigured, self.router.get_routes, viewset)
 
     def test_get_lookup(self):
-        viewset = MyCrudViewSet()
+        viewset = MyCRUDViewSet()
         lookup = self.router.get_lookup(viewset)
         assert lookup == '{id}'
 
-        viewset = MyCrudViewSet()
+        viewset = MyCRUDViewSet()
         viewset.lookup_field = 'id'
         lookup = self.router.get_lookup(viewset)
         assert lookup == '{id}'
 
-        viewset = MyCrudViewSet()
+        viewset = MyCRUDViewSet()
         viewset.lookup_url_kwargs = {'uuid': 1}
         lookup = self.router.get_lookup(viewset)
         assert lookup == '{uuid}'
 
     def test_nested_route(self):
-        viewset = MyCrudViewSet()
+        viewset = MyCRUDViewSet()
         viewset.lookup_url_kwargs = {'uuid': 1, 'parent_id': 2}
         self.assertRaises(ImproperlyConfigured, self.router.get_lookup, viewset)
 
@@ -109,7 +109,7 @@ class ViewSetRouterTests(TestCase):
         assert mapping == {'get': 'list'}
 
     def test_register(self):
-        viewset = CrudViewSet()
+        viewset = CRUDViewSet()
         self.config.reset_mock()
         self.router.register('users', viewset, 'user')
         self.config.add_route.assert_any_call('user-list', '/users/')

@@ -3,7 +3,7 @@ from pyramid.response import Response
 
 from unittest import TestCase
 
-from pyramid_restful.viewsets import APIViewSet, CrudViewSet
+from pyramid_restful.viewsets import APIViewSet, CRUDViewSet
 
 
 class MyViewSet(APIViewSet):
@@ -12,7 +12,7 @@ class MyViewSet(APIViewSet):
         return Response({'method': 'GET', 'action': 'list'})
 
 
-class MyCrudViewSet(CrudViewSet):
+class MyCRUDViewSet(CRUDViewSet):
     """
     All methods will throw not implemented exceptions.
     """
@@ -35,14 +35,14 @@ class ViewSetTests(TestCase):
         self.assertRaises(TypeError, MyViewSet.as_view)
 
 
-class CrudViewSetTests(TestCase):
+class CRUDViewSetTests(TestCase):
 
     def setUp(self):
-        self.viewset = MyCrudViewSet.as_view(action_map={
+        self.viewset = MyCRUDViewSet.as_view(action_map={
             'get': 'list',
             'post': 'create'
         })
-        self.detail_viewset = MyCrudViewSet.as_view(action_map={
+        self.detail_viewset = MyCRUDViewSet.as_view(action_map={
             'get': 'retrieve',
             'put': 'update',
             'patch': 'partial_update',

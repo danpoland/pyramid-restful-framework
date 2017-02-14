@@ -2,6 +2,8 @@ from . import modelmixins
 from .viewsets import ViewSetMixin
 from .modelviews import ModelAPIView
 
+__all__ = ['ModelAPIView', 'ReadOnlyModelViewSet', 'ModelCRUDViewSet']
+
 
 class ModelAPIViewset(ViewSetMixin, ModelAPIView):
     pass
@@ -16,7 +18,7 @@ class ReadOnlyModelViewSet(modelmixins.RetrieveModelMixin,
     pass
 
 
-class ModelViewSet(modelmixins.CreateModelMixin,
+class ModelCRUDViewSet(modelmixins.CreateModelMixin,
                    modelmixins.RetrieveModelMixin,
                    modelmixins.UpdateModelMixin,
                    modelmixins.DestroyModelMixin,
