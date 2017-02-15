@@ -31,40 +31,35 @@ class APIViewTests(TestCase):
 
     def setUp(self):
         self.test_view = MyView.as_view(name='MyView')
+        self.request = testing.DummyRequest()
 
     def test_implemented_method_dispatch(self):
-        request = testing.DummyRequest()
-        response = self.test_view(request)
+        response = self.test_view(self.request)
         expected = {'method': 'GET'}
         assert response.status_code == 200
         assert response.body == expected
 
     def test_method_not_allowed(self):
-        request = testing.DummyRequest()
-        request.method = 'PUT'
-        response = self.test_view(request)
+        self.request.method = 'PUT'
+        response = self.test_view(self.request)
         assert response.status_code == 405
 
     def test_initkwargs(self):
         view = InitKwargsView.as_view(name='test')
-        request = testing.DummyRequest()
-        response = view(request)
+        response = view(self.request)
         expected = {'name': 'test'}
         assert response.body == expected
 
     def test_raises_exception(self):
         view = ExceptionView.as_view()
-        request = testing.DummyRequest()
-        self.assertRaises(Exception, view, request)
+        self.assertRaises(Exception, view, self.request)
 
     def test_invalid_method_exception(self):
-        request = testing.DummyRequest()
-        request.method = 'PUTZ'
-        response = self.test_view(request)
+        self.request.method = 'PUTZ'
+        response = self.test_view(self.request)
         assert response.status_code == 405
 
     def test_options_request(self):
-        request = testing.DummyRequest()
-        request.method = 'OPTIONS'
-        response = self.test_view(request)
+        self.request.method = 'OPTIONS'
+        response = self.test_view(self.request)
         assert response.headers.get('Allow') == ['GET', 'POST', 'OPTIONS']

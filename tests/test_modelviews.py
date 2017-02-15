@@ -52,7 +52,8 @@ def get_dbsession():
     return Session()
 
 
-class ModelAPIViewUnitTests(TestCase):
+class ModelAPIViewTests(TestCase):
+
     @classmethod
     def setUpClass(cls):
         Base.metadata.create_all(engine)
@@ -147,7 +148,6 @@ class ModelAPIViewUnitTests(TestCase):
         view = UserAPIView()
         view.request = self.request
         query = view.get_query()
-
         view.paginate_query(query)
         view.paginator.paginate_query.assert_called_once()
 

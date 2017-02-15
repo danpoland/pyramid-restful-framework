@@ -39,7 +39,8 @@ def get_dbsession():
     return Session()
 
 
-class ModelViewSetIntegrationTests(TestCase):
+class ModelViewSetTests(TestCase):
+
     @classmethod
     def setUpClass(cls):
         Base.metadata.create_all(engine)

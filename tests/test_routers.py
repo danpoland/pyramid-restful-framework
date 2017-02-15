@@ -22,17 +22,10 @@ class ReadOnlyViewSet(APIViewSet):
 
 
 class ViewSetRouterTests(TestCase):
+
     def setUp(self):
         self.config = MagicMock(spec=Configurator)
         self.router = ViewSetRouter(self.config)
-
-    # def viewsetrouter_test(self):
-    #     router = ViewSetRouter(self.config)
-    #
-    #     with patch.object(CRUDViewSet) as viewset:
-    #         router.register('myobjects', viewset, 'myobject')
-    #
-    #     router
 
     def test_get_routes(self):
         viewset = MyCRUDViewSet()

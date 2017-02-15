@@ -38,6 +38,7 @@ class ViewSetTests(TestCase):
 class CRUDViewSetTests(TestCase):
 
     def setUp(self):
+        self.request = testing.DummyRequest()
         self.viewset = MyCRUDViewSet.as_view(action_map={
             'get': 'list',
             'post': 'create'
@@ -50,29 +51,23 @@ class CRUDViewSetTests(TestCase):
         })
 
     def test_list(self):
-        request = testing.DummyRequest()
-        self.assertRaises(NotImplementedError, self.viewset, request)
+        self.assertRaises(NotImplementedError, self.viewset, self.request)
 
     def test_create(self):
-        request = testing.DummyRequest()
-        request.method = 'POST'
-        self.assertRaises(NotImplementedError, self.viewset, request)
+        self.request.method = 'POST'
+        self.assertRaises(NotImplementedError, self.viewset, self.request)
 
     def test_retrieve(self):
-        request = testing.DummyRequest()
-        self.assertRaises(NotImplementedError, self.detail_viewset, request)
+        self.assertRaises(NotImplementedError, self.detail_viewset, self.request)
 
     def test_update(self):
-        request = testing.DummyRequest()
-        request.method = 'PUT'
-        self.assertRaises(NotImplementedError, self.detail_viewset, request)
+        self.request.method = 'PUT'
+        self.assertRaises(NotImplementedError, self.detail_viewset, self.request)
 
     def test_partial_update(self):
-        request = testing.DummyRequest()
-        request.method = 'PATCH'
-        self.assertRaises(NotImplementedError, self.detail_viewset, request)
+        self.request.method = 'PATCH'
+        self.assertRaises(NotImplementedError, self.detail_viewset, self.request)
 
     def test_destroy(self):
-        request = testing.DummyRequest()
-        request.method = 'DELETE'
-        self.assertRaises(NotImplementedError, self.detail_viewset, request)
+        self.request.method = 'DELETE'
+        self.assertRaises(NotImplementedError, self.detail_viewset, self.request)
