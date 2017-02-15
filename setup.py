@@ -97,9 +97,8 @@ setup(
     packages=get_packages(package),
     package_data=get_package_data(package),
     install_requires=install_requires,
-    extras_require={
-        'testing': tests_require,
-    },
+    setup_requires=['pytest-runner'],
+    tests_require=tests_require,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
