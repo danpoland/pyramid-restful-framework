@@ -16,7 +16,8 @@ author = 'Daniel Poland'
 author_email = 'danpoland84@gmail.com'
 install_requires = [
     'pyramid',
-    'sqlalchemy'
+    'sqlalchemy',
+    'marshmallow',
 ]
 
 tests_require = [
