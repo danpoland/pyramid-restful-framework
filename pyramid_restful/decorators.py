@@ -1,6 +1,3 @@
-__all__ = ['detail_route', 'list_route']
-
-
 def detail_route(methods=None, **kwargs):
     """
     Used to mark a method on a ViewSet that should be routed for detail requests.

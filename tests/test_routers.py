@@ -4,11 +4,11 @@ from unittest.mock import MagicMock
 from pyramid.config import Configurator
 
 from pyramid_restful.routers import ViewSetRouter, Route
-from pyramid_restful.viewsets import CRUDViewSet, APIViewSet
+from pyramid_restful.viewsets import ModelCRUDViewSet, APIViewSet
 from pyramid_restful.exceptions import ImproperlyConfigured
 
 
-class MyCRUDViewSet(CRUDViewSet):
+class MyCRUDViewSet(ModelCRUDViewSet):
     pass
 
 
@@ -102,7 +102,7 @@ class ViewSetRouterTests(TestCase):
         assert mapping == {'get': 'list'}
 
     def test_register(self):
-        viewset = CRUDViewSet()
+        viewset = ModelCRUDViewSet()
         self.config.reset_mock()
         self.router.register('users', viewset, 'user')
         self.config.add_route.assert_any_call('user-list', '/users/')

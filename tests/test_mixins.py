@@ -3,7 +3,7 @@ from unittest import TestCase, mock
 from pyramid import testing
 from pyramid.response import Response
 
-from pyramid_restful import modelmixins
+from pyramid_restful import mixins
 
 
 class MockAPIView:
@@ -81,7 +81,7 @@ class ModelMixinUnitTests(TestCase):
         self.request.dbsession = mock.Mock()
 
     def test_list_mixin(self):
-        class ListViewTest(modelmixins.ListModelMixin, MockAPIView):
+        class ListViewTest(mixins.ListModelMixin, MockAPIView):
             pass
 
         view = ListViewTest()
@@ -90,7 +90,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.body == b'[{"id":1,"name":"testing"}]'
 
     def test_list_mixin_no_page(self):
-        class ListViewTest(modelmixins.ListModelMixin, MockAPIViewNoPage):
+        class ListViewTest(mixins.ListModelMixin, MockAPIViewNoPage):
             pass
 
         view = ListViewTest()
@@ -99,7 +99,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.body == b'[{"id":1,"name":"testing"},{"id":2,"name":"testing 2"}]'
 
     def test_retrieve_mixin(self):
-        class RetrieveViewTest(modelmixins.RetrieveModelMixin, MockAPIView):
+        class RetrieveViewTest(mixins.RetrieveModelMixin, MockAPIView):
             pass
 
         view = RetrieveViewTest()
@@ -108,7 +108,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.body == b'{"id":1,"name":"testing"}'
 
     def test_create_mixin(self):
-        class CreateViewTest(modelmixins.CreateModelMixin, MockAPIView):
+        class CreateViewTest(mixins.CreateModelMixin, MockAPIView):
             pass
 
         view = CreateViewTest()
@@ -120,7 +120,7 @@ class ModelMixinUnitTests(TestCase):
         self.request.dbsession.add.assert_called_once()
 
     def test_bad_create_mixin(self):
-        class CreateViewTest(modelmixins.CreateModelMixin, MockAPIView):
+        class CreateViewTest(mixins.CreateModelMixin, MockAPIView):
             pass
 
         view = CreateViewTest()
@@ -131,7 +131,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.body == b'{"id":["invalid value."]}'
 
     def test_update(self):
-        class UpdateViewTest(modelmixins.UpdateModelMixin, MockAPIView):
+        class UpdateViewTest(mixins.UpdateModelMixin, MockAPIView):
             pass
 
         view = UpdateViewTest()
@@ -141,7 +141,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.body == b'{"id":1,"name":"testing1"}'
 
     def test_bad_update(self):
-        class UpdateViewTest(modelmixins.UpdateModelMixin, MockAPIView):
+        class UpdateViewTest(mixins.UpdateModelMixin, MockAPIView):
             pass
 
         view = UpdateViewTest()
@@ -150,7 +150,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.status_code == 400
 
     def test_partial_update(self):
-        class UpdateViewTest(modelmixins.UpdateModelMixin, MockAPIView):
+        class UpdateViewTest(mixins.UpdateModelMixin, MockAPIView):
             pass
 
         view = UpdateViewTest()
@@ -160,7 +160,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.body == b'{"id":1,"name":"testing1"}'
 
     def test_destroy(self):
-        class DestroyViewTest(modelmixins.DestroyModelMixin, MockAPIView):
+        class DestroyViewTest(mixins.DestroyModelMixin, MockAPIView):
             pass
 
         view = DestroyViewTest()

@@ -10,7 +10,7 @@ from sqlalchemy.orm.query import Query
 
 from marshmallow import Schema, fields
 
-from pyramid_restful import modelviews
+from pyramid_restful import generics
 
 engine = create_engine('sqlite://')
 Base = declarative_base()
@@ -28,14 +28,14 @@ class UserSchema(Schema):
     name = fields.String()
 
 
-class UserAPIView(modelviews.ModelAPIView):
+class UserAPIView(generics.GenericAPIView):
     model = User
     schema_class = UserSchema
     filter_fields = [User.name]
     pagination_class = mock.Mock()
 
 
-class UserOverrideView(modelviews.ModelAPIView):
+class UserOverrideView(generics.GenericAPIView):
     model = User
     lookup_column = (User, 'id')
 
@@ -52,7 +52,7 @@ def get_dbsession():
     return Session()
 
 
-class ModelAPIViewTests(TestCase):
+class GenericAPIViewTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -87,7 +87,7 @@ class ModelAPIViewTests(TestCase):
         assert isinstance(query, Query)
 
     def test_missing_model(self):
-        view = modelviews.ModelAPIView()
+        view = generics.GenericAPIView()
         view.request = self.request
         self.assertRaises(AssertionError, view.get_query)
 
@@ -164,10 +164,10 @@ class ModelAPIViewTests(TestCase):
         view.paginator.get_paginated_response.assert_called_once()
 
 
-class ConcreteModelAPIViewsTest(TestCase):
+class ConcreteGenericAPIViewsTest(TestCase):
 
     def test_create_api_view_post(self):
-        class MockCreateApiView(modelviews.CreateAPIView):
+        class MockCreateApiView(generics.CreateAPIView):
             def create(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -179,7 +179,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_list_api_view_get(self):
-        class MockListApiView(modelviews.ListAPIView):
+        class MockListApiView(generics.ListAPIView):
             def list(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -191,7 +191,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_api_view_get(self):
-        class MockRetrieveApiView(modelviews.RetrieveAPIView):
+        class MockRetrieveApiView(generics.RetrieveAPIView):
             def retrieve(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -203,7 +203,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_destroy_api_view_delete(self):
-        class MockDestroyApiView(modelviews.DestroyAPIView):
+        class MockDestroyApiView(generics.DestroyAPIView):
             def destroy(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -215,7 +215,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_update_api_view_partial_update(self):
-        class MockUpdateApiView(modelviews.UpdateAPIView):
+        class MockUpdateApiView(generics.UpdateAPIView):
             def partial_update(self, request, *args, **kwargs):
                 self.partial_called = True
                 self.partial_call_args = (request, args, kwargs)
@@ -235,7 +235,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.partial_call_args == data
 
     def test_list_create_api_view(self):
-        class MockListCreateApiView(modelviews.ListCreateAPIView):
+        class MockListCreateApiView(generics.ListCreateAPIView):
             def list(self, request, *args, **kwargs):
                 self.list_called = True
                 self.list_call_args = (request, args, kwargs)
@@ -255,7 +255,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_update_api_view_get(self):
-        class MockRetrieveUpdateApiView(modelviews.RetrieveUpdateAPIView):
+        class MockRetrieveUpdateApiView(generics.RetrieveUpdateAPIView):
             def retrieve(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -267,7 +267,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_update_api_view_put(self):
-        class MockRetrieveUpdateApiView(modelviews.RetrieveUpdateAPIView):
+        class MockRetrieveUpdateApiView(generics.RetrieveUpdateAPIView):
             def update(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -279,7 +279,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_update_api_view_patch(self):
-        class MockRetrieveUpdateApiView(modelviews.RetrieveUpdateAPIView):
+        class MockRetrieveUpdateApiView(generics.RetrieveUpdateAPIView):
             def partial_update(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -291,7 +291,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_destroy_api_view_get(self):
-        class MockRetrieveDestroyUApiView(modelviews.RetrieveDestroyAPIView):
+        class MockRetrieveDestroyUApiView(generics.RetrieveDestroyAPIView):
             def retrieve(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -303,7 +303,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_destroy_api_view_delete(self):
-        class MockRetrieveDestroyUApiView(modelviews.RetrieveDestroyAPIView):
+        class MockRetrieveDestroyUApiView(generics.RetrieveDestroyAPIView):
             def destroy(self, request, *args, **kwargs):
                 self.called = True
                 self.call_args = (request, args, kwargs)
@@ -315,7 +315,7 @@ class ConcreteModelAPIViewsTest(TestCase):
         assert view.call_args == data
 
     def test_retrieve_update_destroy_api_view(self):
-        class MockRetrieveUpdateDestroyAPIView(modelviews.RetrieveUpdateDestroyAPIView):
+        class MockRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
             def retrieve(self, request, *args, **kwargs):
                 self.r_called = True
                 self.r_call_args = (request, args, kwargs)

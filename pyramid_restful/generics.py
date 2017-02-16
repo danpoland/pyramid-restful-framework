@@ -4,12 +4,10 @@ from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy import Column
 from sqlalchemy.orm.exc import NoResultFound
 
-from . import modelmixins
-
-__all__ = ['ModelAPIView']
+from . import mixins
 
 
-class ModelAPIView(APIView):
+class GenericAPIView(APIView):
     model = None  # SQLAlchemy model class
     schema_class = None  # marshmallow schema class
     filter_fields = None  # list of Column objects
@@ -123,8 +121,8 @@ class ModelAPIView(APIView):
 # Concrete view classes that provide method handlers
 # by composing the mixin classes with the base view.
 
-class CreateAPIView(modelmixins.CreateModelMixin,
-                    ModelAPIView):
+class CreateAPIView(mixins.CreateModelMixin,
+                    GenericAPIView):
     """
     Concrete view for creating a model instance.
     """
@@ -133,8 +131,8 @@ class CreateAPIView(modelmixins.CreateModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class ListAPIView(modelmixins.ListModelMixin,
-                  ModelAPIView):
+class ListAPIView(mixins.ListModelMixin,
+                  GenericAPIView):
     """
     Concrete view for listing a queryset.
     """
@@ -143,8 +141,8 @@ class ListAPIView(modelmixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-class RetrieveAPIView(modelmixins.RetrieveModelMixin,
-                      ModelAPIView):
+class RetrieveAPIView(mixins.RetrieveModelMixin,
+                      GenericAPIView):
     """
     Concrete view for retrieving a model instance.
     """
@@ -153,8 +151,8 @@ class RetrieveAPIView(modelmixins.RetrieveModelMixin,
         return self.retrieve(request, *args, **kwargs)
 
 
-class DestroyAPIView(modelmixins.DestroyModelMixin,
-                     ModelAPIView):
+class DestroyAPIView(mixins.DestroyModelMixin,
+                     GenericAPIView):
     """
     Concrete view for deleting a model instance.
     """
@@ -163,8 +161,8 @@ class DestroyAPIView(modelmixins.DestroyModelMixin,
         return self.destroy(request, *args, **kwargs)
 
 
-class UpdateAPIView(modelmixins.UpdateModelMixin,
-                    ModelAPIView):
+class UpdateAPIView(mixins.UpdateModelMixin,
+                    GenericAPIView):
     """
     Concrete view for updating a model instance.
     """
@@ -176,9 +174,9 @@ class UpdateAPIView(modelmixins.UpdateModelMixin,
         return self.partial_update(request, *args, **kwargs)
 
 
-class ListCreateAPIView(modelmixins.ListModelMixin,
-                        modelmixins.CreateModelMixin,
-                        ModelAPIView):
+class ListCreateAPIView(mixins.ListModelMixin,
+                        mixins.CreateModelMixin,
+                        GenericAPIView):
     """
     Concrete view for listing a queryset or creating a model instance.
     """
@@ -190,9 +188,9 @@ class ListCreateAPIView(modelmixins.ListModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class RetrieveUpdateAPIView(modelmixins.RetrieveModelMixin,
-                            modelmixins.UpdateModelMixin,
-                            ModelAPIView):
+class RetrieveUpdateAPIView(mixins.RetrieveModelMixin,
+                            mixins.UpdateModelMixin,
+                            GenericAPIView):
     """
     Concrete view for retrieving, updating a model instance.
     """
@@ -207,9 +205,9 @@ class RetrieveUpdateAPIView(modelmixins.RetrieveModelMixin,
         return self.partial_update(request, *args, **kwargs)
 
 
-class RetrieveDestroyAPIView(modelmixins.RetrieveModelMixin,
-                             modelmixins.DestroyModelMixin,
-                             ModelAPIView):
+class RetrieveDestroyAPIView(mixins.RetrieveModelMixin,
+                             mixins.DestroyModelMixin,
+                             GenericAPIView):
     """
     Concrete view for retrieving or deleting a model instance.
     """
@@ -221,10 +219,10 @@ class RetrieveDestroyAPIView(modelmixins.RetrieveModelMixin,
         return self.destroy(request, *args, **kwargs)
 
 
-class RetrieveUpdateDestroyAPIView(modelmixins.RetrieveModelMixin,
-                                   modelmixins.UpdateModelMixin,
-                                   modelmixins.DestroyModelMixin,
-                                   ModelAPIView):
+class RetrieveUpdateDestroyAPIView(mixins.RetrieveModelMixin,
+                                   mixins.UpdateModelMixin,
+                                   mixins.DestroyModelMixin,
+                                   GenericAPIView):
     """
     Concrete view for retrieving, updating or deleting a model instance.
     """
