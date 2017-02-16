@@ -6,3 +6,4 @@ dist/
 
 !.gitignore
 !.travis.yml
+!.coveragerc
