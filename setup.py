@@ -8,7 +8,7 @@ import sys
 from io import open
 from setuptools import setup
 
-name = 'pyramid-restful'
+name = 'pyramid-restful-framework'
 package = 'pyramid_restful'
 description = 'RESTful API framework for Pyramid.'
 url = 'https://github.com/danpoland/pyramid-restful-framework'
