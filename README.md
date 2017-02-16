@@ -1,5 +1,6 @@
 [![pypi-version]][pypi]
 [![build-status-image]][travis]
+[![Coverage Status](https://coveralls.io/repos/github/danpoland/pyramid-restful-framework/badge.svg?branch=master)](https://coveralls.io/github/danpoland/pyramid-restful-framework?branch=master)
 
 # pyramid-restful-framework
 A RESTful API framework for Pyramid.
