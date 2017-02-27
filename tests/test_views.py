@@ -62,4 +62,4 @@ class APIViewTests(TestCase):
     def test_options_request(self):
         self.request.method = 'OPTIONS'
         response = self.test_view(self.request)
-        assert response.headers.get('Allow') == ['GET', 'POST', 'OPTIONS']
+        assert response.headers.get('Allow') == "GET, POST, OPTIONS"
