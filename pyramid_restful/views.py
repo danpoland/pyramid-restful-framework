@@ -69,7 +69,7 @@ class APIView:
         response = Response()
 
         response.headers['Allow'] = ', '.join(self.allowed_methods)
-        response.headers['Content-Length'] = 0
+        response.headers['Content-Length'] = '0'
 
         return response
 
