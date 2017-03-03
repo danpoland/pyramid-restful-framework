@@ -8,6 +8,10 @@ from . import mixins
 
 
 class GenericAPIView(APIView):
+    """
+    Provide default functionality for working with RESTFul endpoints.
+    """
+
     model = None  # SQLAlchemy model class
     schema_class = None  # marshmallow schema class
     filter_fields = None  # list of Column objects

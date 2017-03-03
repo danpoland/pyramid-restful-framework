@@ -12,7 +12,8 @@ __all__ = ['APIView']
 
 class APIView:
     """
-    DOC
+    Base for class based views. Requests are routed to a view's
+    method with the same name as the HTTP method of the request.
     """
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
