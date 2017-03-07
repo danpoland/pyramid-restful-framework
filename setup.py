@@ -15,6 +15,7 @@ url = 'https://github.com/danpoland/pyramid-restful-framework'
 author = 'Daniel Poland'
 author_email = 'danpoland84@gmail.com'
 install_requires = [
+    'six',
     'pyramid',
     'sqlalchemy',
     'marshmallow',
