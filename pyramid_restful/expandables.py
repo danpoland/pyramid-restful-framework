@@ -19,18 +19,19 @@ class ExpandableOpts(SchemaOpts):
 
 class ExpandableSchemaMixin:
     """
-    Supports optionally expandable fields based on `expand` query strings included in the
+    Supports optionally expandable fields based on QUERY_KEY query strings included in the
     request's url.
     """
 
     OPTIONS_CLASS = ExpandableOpts
+    QUERY_KEY = 'expand'
 
     @pre_dump
     def update_expandables(self, data):
         request = self.context.get('request')
 
         if request:
-            requested_expands = list(val for key, val in request.params.items() if key == 'expand')
+            requested_expands = list(val for key, val in request.params.items() if key == self.QUERY_KEY)
             available_expands = self.opts.expandable_fields.keys()
 
             for field in requested_expands:
@@ -53,7 +54,6 @@ class ExpandableViewMixin:
     """
 
     expandable_fields = None
-    expandable_key = 'expand'
 
     def get_query(self):
         """
@@ -63,9 +63,10 @@ class ExpandableViewMixin:
 
         query = super(ExpandableViewMixin, self).get_query()
         expandable_fields = getattr(self, 'expandable_fields', [])
+        query_key = self.schema_class.QUERY_KEY
 
         if expandable_fields:
-            requested_expands = list(val for key, val in self.request.params.items() if key == self.expandable_key)
+            requested_expands = list(val for key, val in self.request.params.items() if key == self.query_key)
 
             if requested_expands:
                 available_expands = self.expandable_fields.keys()
