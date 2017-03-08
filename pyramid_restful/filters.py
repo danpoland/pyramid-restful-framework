@@ -45,23 +45,3 @@ class FieldFilter(BaseFilter):
         """
 
         return params
-
-
-class JSONAPIFilter(FieldFilter):
-    """
-    Implements filtering based on the JSON API recommended query string style.
-    """
-
-    def parse_query_string(self, params):
-        """
-        Expected filter query strings look like: filter[<field_name>].
-        Pyramid takes care of decoding the percent encoded brackets.
-        """
-        results = {}
-
-        for key, val in params:
-            if key[0:7] == 'filter[' and key[-1] == ']':
-                results[key[7:-1]] = val
-
-        return results
-
