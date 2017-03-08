@@ -14,7 +14,7 @@ class GenericAPIView(APIView):
 
     model = None  # SQLAlchemy model class
     schema_class = None  # marshmallow schema class
-    filter_fields = None  # list of Column objects
+    filter_classes = ()
     lookup_column = 'id'
     pagination_class = None  # todo make default configurable
 
@@ -74,20 +74,15 @@ class GenericAPIView(APIView):
         return klass(*args, **kwargs, context=dict(request=self.request))
 
     def filter_query(self, query):
-        filter_list = []
+        """
+        Filter the given query using the filter classes specified on the view
+        if any are specified.
+        """
 
-        if self.filter_fields and self.request.params:
-            available_fields = list(map(lambda x: x.name, self.filter_fields))
+        for filter_class in list(self.filter_classes):
+            query = filter_class().filter_query(self.request, query, self)
 
-            for key, val in self.request.params.items():
-                try:
-                    i = available_fields.index(key)
-                except ValueError:
-                    continue
-
-                filter_list.append(self.filter_fields[i] == val)
-
-        return query.filter(*filter_list) if filter_list else query
+        return query
 
     @property
     def paginator(self):
