@@ -53,10 +53,11 @@ class ExpandableViewMixin:
     """
 
     expandable_fields = None
+    expandable_key = 'expand'
 
     def get_query(self):
         """
-        If your query is more complicated what is supported below override this method.
+        If your query is more complicated than what is supported below, override this method.
         Don't forget to call super though.
         """
 
@@ -64,7 +65,7 @@ class ExpandableViewMixin:
         expandable_fields = getattr(self, 'expandable_fields', [])
 
         if expandable_fields:
-            requested_expands = list(val for key, val in self.request.params.items() if key == 'expand')
+            requested_expands = list(val for key, val in self.request.params.items() if key == self.expandable_key)
 
             if requested_expands:
                 available_expands = self.expandable_fields.keys()
