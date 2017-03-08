@@ -33,6 +33,7 @@ class AccountView:
 
 
 class ExpandableAccountView(ExpandableViewMixin, AccountView):
+    schema_class = AccountSchema
     expandable_fields = {'owner': {
         'column': 'owner_id'
     }}

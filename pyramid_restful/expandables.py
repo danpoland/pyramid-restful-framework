@@ -66,7 +66,7 @@ class ExpandableViewMixin:
         query_key = self.schema_class.QUERY_KEY
 
         if expandable_fields:
-            requested_expands = list(val for key, val in self.request.params.items() if key == self.query_key)
+            requested_expands = list(val for key, val in self.request.params.items() if key == query_key)
 
             if requested_expands:
                 available_expands = self.expandable_fields.keys()
