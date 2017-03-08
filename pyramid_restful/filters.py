@@ -7,7 +7,7 @@ class BaseFilter:
         """
         Return the filter query.
         """
-        raise NotImplementedError('.filter_query() must be implemented.')
+        raise NotImplementedError('.filter_query() must be implemented.')  # pragma: no cover
 
 
 class FieldFilter(BaseFilter):
