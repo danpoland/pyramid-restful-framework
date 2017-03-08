@@ -11,6 +11,7 @@ from sqlalchemy.orm.query import Query
 from marshmallow import Schema, fields
 
 from pyramid_restful import generics
+from pyramid_restful.filters import FieldFilter
 
 engine = create_engine('sqlite://')
 Base = declarative_base()
@@ -31,8 +32,9 @@ class UserSchema(Schema):
 class UserAPIView(generics.GenericAPIView):
     model = User
     schema_class = UserSchema
-    filter_fields = [User.name]
     pagination_class = mock.Mock()
+    filter_classes = (FieldFilter,)
+    filter_fields = (User.name,)
 
 
 class UserOverrideView(generics.GenericAPIView):
@@ -131,7 +133,7 @@ class GenericAPIViewTests(TestCase):
 
     def test_filter_query(self):
         view = UserAPIView()
-        self.request.params = {'name': 'testing', 'id': 3}
+        self.request.params = {'name': 'testing'}
         view.request = self.request
         results = view.filter_query(view.get_query()).all()
         assert len(results) == 1
