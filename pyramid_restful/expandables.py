@@ -1,6 +1,6 @@
 from marshmallow import SchemaOpts, pre_dump
 
-__all__ = ['ExpandableSchemaMixin', 'ExpandableViewMixin']
+__all__ = ['ExpandableSchemaMixin', 'ExpandableViewMixin', 'ExpandableOpts']
 
 
 class ExpandableOpts(SchemaOpts):
