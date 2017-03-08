@@ -54,15 +54,13 @@ class JSONAPIFilter(FieldFilter):
 
     def parse_query_string(self, params):
         """
-        Expected filter query strings look like: filter[<field_name>]
+        Expected filter query strings look like: filter[<field_name>].
+        Pyramid takes care of decoding the percent encoded brackets.
         """
-        # todo: need to figure out if this will/should be coming in url encoded\
-        # todo: these should be percent encoded in the request does pyarmid decode them? shoudl we do it or look for the percent encoding?
-
         results = {}
 
         for key, val in params:
-            if key[0:7] == 'filter[' and key[-1] == ']':  # todo encoding?
+            if key[0:7] == 'filter[' and key[-1] == ']':
                 results[key[7:-1]] = val
 
         return results
