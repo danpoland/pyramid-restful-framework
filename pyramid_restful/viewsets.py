@@ -72,7 +72,32 @@ class ModelCRUDViewSet(mixins.CreateModelMixin,
                        mixins.ListModelMixin,
                        GenericAPIViewSet):
     """
-    A viewset that provides default `create()`, `retrieve()`, `update()`,
-    `partial_update()`, `destroy()` and `list()` actions.
+    A viewset that provides default `create()`, `retrieve()`, `update()`, `destroy()` and `list()` actions.
+    """
+    pass
+
+
+class ModelCRPDViewSet(mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin,
+                       mixins.PartialUpdateMixin,
+                       mixins.DestroyModelMixin,
+                       mixins.ListModelMixin,
+                       GenericAPIViewSet):
+    """
+    A viewset that provides default `create()`, `retrieve()`, `partial_update()`, `destroy()` and `list()` actions.
+    """
+    pass
+
+
+class ModelCRUPDViewSet(mixins.CreateModelMixin,
+                        mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.PartialUpdateMixin,
+                        mixins.DestroyModelMixin,
+                        mixins.ListModelMixin,
+                        GenericAPIViewSet):
+    """
+    A viewset that provides default `create()`, `retrieve()`, `partial_update()`, `'update()`,
+    `destroy()` and `list()` actions.
     """
     pass

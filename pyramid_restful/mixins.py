@@ -62,28 +62,49 @@ class CreateModelMixin:
 
 class UpdateModelMixin:
     """
-    Update a model instance.
+    Update a model instance (PUT).
     """
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
         instance = self.get_object()
         schema = self.get_schema()
 
-        data, errors = schema.load(request.json_body, partial=partial)  # todo, hardcoded json here, need to implement parsers
+        data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
 
         if errors:
             return Response(json_body=errors, status=400)  # todo, hardcoded json here, need to implement parsers
 
         self.perform_update(data, instance)
         content = schema.dump(instance)[0]
+
         return Response(json=content)  # todo, hardcoded json here, need to implement parsers
 
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
-
     def perform_update(self, data, instance):
+        # todo circle back on this and possibly use straight update statement
+        for key, val in data.items():
+            setattr(instance, key, val)
+
+
+class PartialUpdateMixin:
+    """
+    Support for partially updating instance (PATCH).
+    """
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        schema = self.get_schema()
+
+        data, errors = schema.load(request.json_body, partial=True)  # todo, hardcoded json here, need to implement parsers
+
+        if errors:
+            return Response(json_body=errors, status=400)  # todo, hardcoded json here, need to implement parsers
+
+        self.perform_partial_update(data, instance)
+        content = schema.dump(instance)[0]
+
+        return Response(json=content)  # todo, hardcoded json here, need to implement parsers
+
+    def perform_partial_update(self, data, instance):
         # todo circle back on this and possibly use straight update statement
         for key, val in data.items():
             setattr(instance, key, val)
@@ -101,3 +122,28 @@ class DestroyModelMixin:
 
     def perform_destroy(self, instance):
         self.request.dbsession.delete(instance)
+
+
+class ActionSchemaMixin:
+    """
+    Allows you to use different schema depending on the
+    action being taken by the request.
+
+    Defaults to the standard schema_class if no actions are specified.
+    """
+
+    def get_schema_class(self):
+        if self.action == 'retrieve' and hasattr(self, 'retrieve_schema'):
+            return self.retrieve_schema
+        elif self.action == 'list' and hasattr(self, 'list_schema'):
+            return self.list_schema
+        elif self.action == 'update' and hasattr(self, 'update_schema'):
+            return self.update_schema
+        elif self.action == 'partial_update' and hasattr(self, 'update_schema'):
+            return self.update_schema
+        elif self.action == 'create' and hasattr(self, 'create_schema'):
+            return self.create_schema
+        elif self.action == 'destroy' and hasattr(self, 'destroy_schema'):
+            return self.destroy_schema
+
+        return self.schema_class

@@ -35,7 +35,7 @@ class UserSchema(Schema):
     name = fields.String()
 
 
-class UserViewSet(viewsets.ModelCRUDViewSet):
+class UserViewSet(viewsets.ModelCRUPDViewSet):
     model = User
     schema_class = UserSchema
 
