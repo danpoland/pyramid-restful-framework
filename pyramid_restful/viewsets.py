@@ -91,6 +91,7 @@ class ModelCRPDViewSet(mixins.CreateModelMixin,
 
 class ModelCRUPDViewSet(mixins.CreateModelMixin,
                         mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
                         mixins.PartialUpdateMixin,
                         mixins.DestroyModelMixin,
                         mixins.ListModelMixin,

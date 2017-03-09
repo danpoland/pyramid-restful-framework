@@ -150,7 +150,7 @@ class ModelMixinUnitTests(TestCase):
         assert response.status_code == 400
 
     def test_partial_update(self):
-        class UpdateViewTest(mixins.UpdateModelMixin, MockAPIView):
+        class UpdateViewTest(mixins.PartialUpdateMixin, MockAPIView):
             pass
 
         view = UpdateViewTest()
