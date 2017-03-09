@@ -62,7 +62,7 @@ class CreateModelMixin:
 
 class UpdateModelMixin:
     """
-    Update a model instance (PUT)
+    Update a model instance (PUT).
     """
 
     def update(self, request, *args, **kwargs):
