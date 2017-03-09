@@ -62,28 +62,49 @@ class CreateModelMixin:
 
 class UpdateModelMixin:
     """
-    Update a model instance.
+    Update a model instance (PUT)
     """
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
         instance = self.get_object()
         schema = self.get_schema()
 
-        data, errors = schema.load(request.json_body, partial=partial)  # todo, hardcoded json here, need to implement parsers
+        data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
 
         if errors:
             return Response(json_body=errors, status=400)  # todo, hardcoded json here, need to implement parsers
 
         self.perform_update(data, instance)
         content = schema.dump(instance)[0]
+
         return Response(json=content)  # todo, hardcoded json here, need to implement parsers
 
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
-
     def perform_update(self, data, instance):
+        # todo circle back on this and possibly use straight update statement
+        for key, val in data.items():
+            setattr(instance, key, val)
+
+
+class PartialUpdateMixin:
+    """
+    Support for partially updating instance (PATCH).
+    """
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        schema = self.get_schema()
+
+        data, errors = schema.load(request.json_body, partial=True)  # todo, hardcoded json here, need to implement parsers
+
+        if errors:
+            return Response(json_body=errors, status=400)  # todo, hardcoded json here, need to implement parsers
+
+        self.perform_partial_update(data, instance)
+        content = schema.dump(instance)[0]
+
+        return Response(json=content)  # todo, hardcoded json here, need to implement parsers
+
+    def perform_partial_update(self, data, instance):
         # todo circle back on this and possibly use straight update statement
         for key, val in data.items():
             setattr(instance, key, val)
