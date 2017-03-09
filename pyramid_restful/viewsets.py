@@ -29,6 +29,7 @@ class ViewSetMixin:
             self.request = request
             self.lookup_url_kwargs = self.request.matchdict
             self.action_map = action_map
+            self.action = self.action_map.get(self.request.method.lower())
 
             for method, action in action_map.items():
                 handler = getattr(self, action)
