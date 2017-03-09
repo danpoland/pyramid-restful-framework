@@ -1,5 +1,7 @@
 from unittest import TestCase, mock
 
+import marshmallow as ma
+
 from pyramid import testing
 from pyramid.response import Response
 
@@ -44,7 +46,7 @@ class MockAPIView:
 
         def load(data, partial=False):
             if not partial and data['id'] == 4:
-                return data, {'id': ['invalid value.']}
+                raise ma.ValidationError(message={'id': ['invalid value.']})
             return data, ''
 
         schema = mock.Mock()
