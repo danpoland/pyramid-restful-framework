@@ -7,7 +7,6 @@ from pyramid_restful import mixins
 
 
 class MockAPIView:
-
     def model_side_effect(**data):
         instance = mock.Mock()
 
@@ -70,10 +69,20 @@ class MockAPIView:
 
 
 class MockAPIViewNoPage(MockAPIView):
-
     def paginate_query(self, data):
         return None
 
+
+class ActionMixinView(mixins.ActionSchemaMixin):
+    retrieve_schema = 'retrieve_schema'
+    list_schema = 'list_schema'
+    update_schema = 'update_schema'
+    create_schema = 'create_schema'
+    destroy_schema = 'destroy_schema'
+    schema_class = 'schema_class'
+
+
+# ------ Tests ------
 
 class ModelMixinUnitTests(TestCase):
     def setUp(self):
@@ -168,3 +177,37 @@ class ModelMixinUnitTests(TestCase):
         response = view.destroy(self.request)
         assert response.status_code == 204
         self.request.dbsession.delete.assert_called_once()
+
+
+class TestActionSchemaMixin(TestCase):
+
+    def setUp(self):
+        self.view = ActionMixinView()
+
+    def test_retrieve(self):
+        self.view.action = 'retrieve'
+        assert self.view.get_schema_class() == 'retrieve_schema'
+
+    def test_list(self):
+        self.view.action = 'list'
+        assert self.view.get_schema_class() == 'list_schema'
+
+    def test_update(self):
+        self.view.action = 'update'
+        assert self.view.get_schema_class() == 'update_schema'
+
+    def test_partial_update(self):
+        self.view.action = 'partial_update'
+        assert self.view.get_schema_class() == 'update_schema'
+
+    def test_create(self):
+        self.view.action = 'create'
+        assert self.view.get_schema_class() == 'create_schema'
+
+    def test_destroy(self):
+        self.view.action = 'destroy'
+        assert self.view.get_schema_class() == 'destroy_schema'
+
+    def test_default(self):
+        self.view.action = 'default'
+        assert self.view.get_schema_class() == 'schema_class'

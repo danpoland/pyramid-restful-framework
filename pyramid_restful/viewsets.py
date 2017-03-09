@@ -101,28 +101,3 @@ class ModelCRUPDViewSet(mixins.CreateModelMixin,
     `destroy()` and `list()` actions.
     """
     pass
-
-
-class ActionSchemaMixin:
-    """
-    Allows you to use different schema depending on the
-    action being taken by the request.
-
-    Defaults to the standard schema_class if no actions are specified.
-    """
-
-    def get_schema_class(self):
-        if self.action == 'retrieve' and hasattr(self, 'retrieve_schema'):
-            return self.retrieve_schema
-        elif self.action == 'list' and hasattr(self, 'list_schema'):
-            return self.list_schema
-        elif self.action == 'update' and hasattr(self, 'update_schema'):
-            return self.update_schema
-        elif self.action == 'partial_update' and hasattr(self, 'update_schema'):
-            return self.update_schema
-        elif self.action == 'create' and hasattr(self, 'create_schema'):
-            return self.create_schema
-        elif self.action == 'destroy' and hasattr(self, 'destroy_schema'):
-            return self.destroy_schema
-
-        return self.schema_class
