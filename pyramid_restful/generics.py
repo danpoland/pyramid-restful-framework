@@ -71,7 +71,7 @@ class GenericAPIView(APIView):
 
     def get_schema(self, *args, **kwargs):
         klass = self.get_schema_class()
-        return klass(*args, **kwargs, context=dict(request=self.request))
+        return klass(*args, **kwargs, strict=True, context=dict(request=self.request))
 
     def filter_query(self, query):
         """
@@ -161,6 +161,7 @@ class DestroyAPIView(mixins.DestroyModelMixin,
 
 
 class UpdateAPIView(mixins.UpdateModelMixin,
+                    mixins.PartialUpdateMixin,
                     GenericAPIView):
     """
     Concrete view for updating a model instance.
@@ -189,6 +190,7 @@ class ListCreateAPIView(mixins.ListModelMixin,
 
 class RetrieveUpdateAPIView(mixins.RetrieveModelMixin,
                             mixins.UpdateModelMixin,
+                            mixins.PartialUpdateMixin,
                             GenericAPIView):
     """
     Concrete view for retrieving, updating a model instance.
@@ -220,6 +222,7 @@ class RetrieveDestroyAPIView(mixins.RetrieveModelMixin,
 
 class RetrieveUpdateDestroyAPIView(mixins.RetrieveModelMixin,
                                    mixins.UpdateModelMixin,
+                                   mixins.PartialUpdateMixin,
                                    mixins.DestroyModelMixin,
                                    GenericAPIView):
     """

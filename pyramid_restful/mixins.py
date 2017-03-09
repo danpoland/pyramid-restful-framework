@@ -1,5 +1,7 @@
 from pyramid.response import Response
 
+import marshmallow as ma
+
 
 class ListModelMixin:
     """
@@ -39,10 +41,11 @@ class CreateModelMixin:
 
     def create(self, request, *args, **kwargs):
         schema = self.get_schema()
-        data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
 
-        if errors:
-            return Response(json=errors, status=400)  # todo, hardcoded json here, need to implement parsers
+        try:
+            data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
+        except ma.ValidationError as err:
+            return Response(json=err.messages, status=400)  # todo, hardcoded json here, need to implement parsers
 
         instance = self.perform_create(data)
         content = schema.dump(instance)[0]
@@ -69,10 +72,10 @@ class UpdateModelMixin:
         instance = self.get_object()
         schema = self.get_schema()
 
-        data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
-
-        if errors:
-            return Response(json_body=errors, status=400)  # todo, hardcoded json here, need to implement parsers
+        try:
+            data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
+        except ma.ValidationError as err:
+            return Response(json_body=err.messages, status=400)  # todo, hardcoded json here, need to implement parsers
 
         self.perform_update(data, instance)
         content = schema.dump(instance)[0]
@@ -94,10 +97,10 @@ class PartialUpdateMixin:
         instance = self.get_object()
         schema = self.get_schema()
 
-        data, errors = schema.load(request.json_body, partial=True)  # todo, hardcoded json here, need to implement parsers
-
-        if errors:
-            return Response(json_body=errors, status=400)  # todo, hardcoded json here, need to implement parsers
+        try:
+            data, errors = schema.load(request.json_body, partial=True)  # todo, hardcoded json here, need to implement parsers
+        except ma.ValidationError as err:
+            return Response(json_body=err.messages, status=400)  # todo, hardcoded json here, need to implement parsers
 
         self.perform_partial_update(data, instance)
         content = schema.dump(instance)[0]
