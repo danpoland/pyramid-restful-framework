@@ -1,10 +1,12 @@
-from collections import OrderedDict, Sequence
+import warnings
+import six
 
 from math import ceil
 
-import warnings
+from collections import OrderedDict, Sequence
 
-import six
+from sqlalchemy.orm.query import Query
+
 from pyramid.exceptions import HTTPNotFound
 from pyramid.response import Response
 
@@ -217,8 +219,11 @@ class PageNumberPagination(BasePagination):
 
     invalid_page_message = 'Invalid page "{page_number}": {message}.'
 
-    def paginate_query(self, data, request):
+    def paginate_query(self, query, request):
         self.request = request
+
+        # Force the execution of the query, so we don't make unnecessary db calls
+        data = query.all() if isinstance(query, Query) else query
         page_size = self.get_page_size(request)
 
         if not page_size:
