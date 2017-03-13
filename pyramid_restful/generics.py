@@ -30,11 +30,12 @@ class GenericAPIView(APIView):
     def get_object(self):
         query = self.filter_query(self.get_query())
 
-        # If query joins more than one table lookup_column must be a
-        # tuple of the model class and a string of the column name.
+        # If query joins more than one table and you need to base the lookup on something besides
+        # an id field on the self.model, you can provide an alternative lookup as tuple of the model class
+        # and a string of the column name.
 
         if isinstance(self.lookup_column, str):
-            lookup_col = Column(self.lookup_column)
+            lookup_col = getattr(self.model, self.lookup_column)
             lookup_val = self.lookup_url_kwargs[self.lookup_column]
         else:
             assert isinstance(self.lookup_column, tuple), (
