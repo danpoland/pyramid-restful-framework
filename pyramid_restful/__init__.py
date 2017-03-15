@@ -1,9 +1,3 @@
-from .settings import reload_api_settings
-
-__version__ = '0.7.0'
+__version__ = '0.6.8'
 
 VERSION = __version__
-
-
-def includeme(config):
-    reload_api_settings(config.registry.settings)

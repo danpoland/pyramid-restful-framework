@@ -1,9 +1,8 @@
 from .views import APIView
 
 from pyramid.httpexceptions import HTTPNotFound
+from sqlalchemy import Column
 from sqlalchemy.orm.exc import NoResultFound
-
-from pyramid_restful.settings import api_settings
 
 from . import mixins
 
@@ -17,7 +16,7 @@ class GenericAPIView(APIView):
     schema_class = None  # marshmallow schema class
     filter_classes = ()
     lookup_column = 'id'
-    pagination_class = api_settings.default_pagination_class
+    pagination_class = None  # todo make default configurable
 
     def get_query(self):
         assert self.model is not None, (

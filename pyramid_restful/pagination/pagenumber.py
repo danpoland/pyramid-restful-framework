@@ -10,8 +10,6 @@ from sqlalchemy.orm.query import Query
 from pyramid.exceptions import HTTPNotFound
 from pyramid.response import Response
 
-from pyramid_restful.settings import  api_settings
-
 from .utilities import remove_query_param, replace_query_param
 from .base import BasePagination
 
@@ -202,7 +200,7 @@ class PageNumberPagination(BasePagination):
     http://api.example.org/accounts/?page=4&page_size=100
     """
 
-    page_size = api_settings.page_size
+    page_size = 100  # todo make configurable
 
     paginator_class = Paginator
 
