@@ -28,6 +28,7 @@ def perform_import(val, setting_name):
         return import_from_string(val, setting_name)
     elif isinstance(val, (list, tuple)):
         return [import_from_string(item, setting_name) for item in val]
+
     return val
 
 
@@ -52,12 +53,16 @@ class APISettings:
     """
 
     def __init__(self, app_settings=None, defaults=None, import_strings=None):
-        self._app_settings = app_settings
+        if app_settings:
+            self._app_settings = app_settings
+
         self.defaults = defaults or DEFAULTS
         self.import_strings = import_strings or IMPORT_STRINGS
 
     @property
     def app_settings(self):
+        if not hasattr(self, '_app_settings'):
+            self._app_settings = {}
         return self._app_settings
 
     def __getattr__(self, attr):
@@ -93,6 +98,6 @@ def reload_api_settings(settings, prefix='restful'):
             continue
 
         if keyfix == prefix:
-            api_settings[setting_name] = val
+            app_settings[setting_name] = val
 
     api_settings = APISettings(app_settings, DEFAULTS, IMPORT_STRINGS)
