@@ -195,12 +195,22 @@ class PageNumberPagination(BasePagination):
     """
     A simple page number based style that supports page numbers as
     query parameters. For example:
-
     http://api.example.org/accounts/?page=4
     http://api.example.org/accounts/?page=4&page_size=100
+    page_size can be overridden as class attribute:
+        class MyPager(PageNumberPagination):
+            page_size = 10
     """
 
-    page_size = 100  # todo make configurable
+    @property
+    def page_size(self):
+        if not hasattr(self, '_page_size'):
+            # make sure we have the most up to date settings
+            # Somebody please come up with something better
+            from pyramid_restful.settings import api_settings
+            self._page_size = api_settings.page_size
+
+        return self._page_size
 
     paginator_class = Paginator
 
