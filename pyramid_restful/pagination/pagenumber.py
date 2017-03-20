@@ -280,7 +280,7 @@ class PageNumberPagination(BasePagination):
         if not self.page.has_next():
             return None
 
-        url = self.request.current_route_url()
+        url = self.get_url_root()
         page_number = self.page.next_page_number()
 
         return replace_query_param(url, self.page_query_param, page_number)
@@ -289,10 +289,18 @@ class PageNumberPagination(BasePagination):
         if not self.page.has_previous():
             return None
 
-        url = self.request.current_route_url()
+        url = self.get_url_root()
         page_number = self.page.previous_page_number()
 
         if page_number == 1:
             return remove_query_param(url, self.page_query_param)
 
         return replace_query_param(url, self.page_query_param, page_number)
+
+    def get_url_root(self):
+        """
+        Override this if you need a different root url.
+        For example if the app is behind a reverse proxy and you
+        want to use the original host in the X-Forwarded-Host header.
+        """
+        return self.request.current_route_url()

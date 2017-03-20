@@ -42,11 +42,11 @@ class LinkHeaderPagination(PageNumberPagination):
         return response
 
     def get_first_link(self):
-        url = self.request.current_route_url()
+        url = self.get_url_root()
         return replace_query_param(url, self.page_query_param, 1)
 
     def get_last_link(self):
-        url = self.request.current_route_url()
+        url = self.get_url_root()
         count = self.page.paginator.count
         page_size = self.get_page_size(self.request)
 
