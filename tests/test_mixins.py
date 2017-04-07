@@ -37,7 +37,7 @@ class MockAPIView:
     def filter_query(self, query):
         return query
 
-    def get_schema(self):
+    def get_schema(self, *args, **kwargs):
         def dump(data, many=False, **kwargs):
             if many:
                 return [{'id': i.id, 'name': i.name} for i in data], ''
