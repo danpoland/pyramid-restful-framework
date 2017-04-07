@@ -70,7 +70,7 @@ class UpdateModelMixin:
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        schema = self.get_schema()
+        schema = self.get_schema(context={'instance': instance})
 
         try:
             data, errors = schema.load(request.json_body)  # todo, hardcoded json here, need to implement parsers
@@ -95,7 +95,7 @@ class PartialUpdateMixin:
 
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
-        schema = self.get_schema()
+        schema = self.get_schema(context={'instance': instance})
 
         try:
             data, errors = schema.load(request.json_body, partial=True)  # todo, hardcoded json here, need to implement parsers

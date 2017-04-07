@@ -82,7 +82,8 @@ class GenericAPIView(APIView):
 
     def get_schema(self, *args, **kwargs):
         klass = self.get_schema_class()
-        return klass(*args, **kwargs, strict=True, context=dict(request=self.request))
+        context = kwargs.pop('context', {'request': self.request})
+        return klass(*args, **kwargs, strict=True, context=context)
 
     def filter_query(self, query):
         """
