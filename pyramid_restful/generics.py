@@ -80,10 +80,16 @@ class GenericAPIView(APIView):
 
         return self.schema_class
 
+    def get_schema_context(self):
+        """
+        Extra context provided to the schema class.
+        """
+        return {'request': self.request}
+
     def get_schema(self, *args, **kwargs):
         klass = self.get_schema_class()
-        context = kwargs.pop('context', {'request': self.request})
-        return klass(*args, **kwargs, strict=True, context=context)
+        kwargs['context'] = self.get_schema_context()
+        return klass(*args, **kwargs, strict=True)
 
     def filter_query(self, query):
         """
