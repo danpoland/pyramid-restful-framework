@@ -1,4 +1,4 @@
-from sqlalchemy import or_
+from sqlalchemy import or_, ARRAY, func
 
 
 class BaseFilter:
@@ -109,3 +109,16 @@ class FieldFilter(AttributeBaseFilter):
         # Support "IN" filtering
         return or_([field == v for v in value.split(',')])
 
+
+class SearchFilter(AttributeBaseFilter):
+    """
+    Implements LIKE filtering based on the search[<field_name>]=<val> querystring.
+    """
+
+    query_string_lookup = 'search'
+
+    def build_comparision(self, field, value):
+        if issubclass(field.type.__class__, ARRAY):
+            return field.any(value.lower())
+
+        return func.lower(field).like('%{}%'.format(value.lower()))
