@@ -13,13 +13,33 @@ class BaseFilter:
         raise NotImplementedError('.filter_query() must be implemented.')  # pragma: no cover
 
 
-class FieldFilter(BaseFilter):
+class AttributeBaseFilter(BaseFilter):
     """
-    Filters a query based on the filter_fields set on the view.
-    filter_fields should be a list of SQLAlchemy Model columns.
-    Supports filtering a comma separated list using OR statements.
-    Supports relationship filter using the . path to attribute. WARNING: Every relationship in a . path is joined.
+    A base class for implementing filters on SQLAlchemy model attributes.
+    Supports filtering a comma separated list using OR statements and relationship filter using
+    the . path to attribute. WARNING: Every relationship in a . path is joined.
+
+    query_string_lookup: The key to use when parsing the requests query string. The <key> in <key>[<field_name>]=<val>.
     """
+
+    query_string_lookup = None
+
+    def parse_query_string(self, params):
+        """
+        Override this method if you need to support query string filter keys other than those in the
+        format of filter[<field_name>].
+
+        :return: dict
+        """
+        results = {}
+
+        for key, val in params.items():
+            lookup_len = len(self.query_string_lookup) + 1
+
+            if key[0:lookup_len] == '{}['.format(self.query_string_lookup) and key[-1] == ']':
+                results[key[lookup_len:-1]] = val
+
+        return results
 
     def filter_query(self, request, query, view):
         if not view.filter_fields or not request.params:
@@ -62,22 +82,30 @@ class FieldFilter(BaseFilter):
                     if join_model not in joined_tables:
                         query = query.join(join_model)
 
-                # If there is only one comparison in or_ it is just AND'd on the query
-                filter_list.append(or_(*[view.filter_fields[i] == v for v in val.split(',')]))
+                filter_list.append(self.build_comparision(view.filter_fields[i], val))
 
             query = query.filter(*filter_list)
 
         return query
 
-    def parse_query_string(self, params):
+    def build_comparision(self, field, value):
         """
-        Override this method if you need to support query string filter keys other than
-        the names of the fields being filtered.
-
-        For example, if your filter querystring param looks like filter[<field_name>], you will
-        just want to return a dictionary with just the field_name, value pair.
-
-        :return: dict
+        Given the model field and the value to be filtered, this should return the statement to be appended
+        as a filter to the final query.
         """
 
-        return params
+        raise NotImplementedError
+
+
+class FieldFilter(AttributeBaseFilter):
+    """
+    Filters a query based on the filter_fields set on the view.
+    filter_fields should be a list of SQLAlchemy Model columns.
+    """
+
+    query_string_lookup = 'filter'
+
+    def build_comparision(self, field, value):
+        # Support "IN" filtering
+        return or_([field == v for v in value.split(',')])
+
