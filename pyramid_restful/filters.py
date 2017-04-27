@@ -88,9 +88,19 @@ class AttributeBaseFilter(BaseFilter):
 
                 filter_list.append(self.build_comparision(filterable_fields[i], val))
 
-            query = query.filter(*filter_list)
+            query = self.apply_filter(query, filter_list)
 
         return query
+
+    def apply_filter(self, query, filter_list):
+        """
+        Override this if you need to do something beside calling filter.
+        :param query: the query that will be returned from the filter_query method.
+        :param filter_list: An array of SQLAlchemy comparative statements.
+        :return: The query
+        """
+
+        return query.filter(*filter_list)
 
     def build_comparision(self, field, value):
         """
@@ -128,3 +138,18 @@ class SearchFilter(AttributeBaseFilter):
             return field.any(value.lower())
 
         return func.lower(field).like('%{}%'.format(value.lower()))
+
+
+class OrderFilter(AttributeBaseFilter):
+    """"
+    Allow ordering of the query based on an order[<field>]=<asc | desc> query string.
+    """
+
+    query_string_lookup = 'order'
+    view_attribute_name = 'order_fields'
+
+    def build_comparision(self, field, value):
+        return field if value != 'desc' else field.desc()
+
+    def apply_filter(self, query, filter_list):
+        return query.order_by(*filter_list)
