@@ -133,7 +133,7 @@ class GenericAPIViewTests(TestCase):
 
     def test_filter_query(self):
         view = UserAPIView()
-        self.request.params = {'name': 'testing'}
+        self.request.params = {'filter[name]': 'testing'}
         view.request = self.request
         results = view.filter_query(view.get_query()).all()
         assert len(results) == 1
@@ -141,7 +141,7 @@ class GenericAPIViewTests(TestCase):
 
     def test_filter_query_empty(self):
         view = UserAPIView()
-        self.request.params = {'name': 'testing3'}
+        self.request.params = {'filter[name]': 'testing3'}
         view.request = self.request
         results = view.filter_query(view.get_query()).all()
         assert len(results) == 0

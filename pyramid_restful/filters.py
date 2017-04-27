@@ -45,10 +45,11 @@ class AttributeBaseFilter(BaseFilter):
         return results
 
     def filter_query(self, request, query, view):
-        if not view.filter_fields or not request.params:
+        filterable_fields = getattr(view, self.view_attribute_name)
+
+        if not filterable_fields or not request.params:
             return query
 
-        filterable_fields = getattr(view, self.view_attribute_name)
         filter_list = []
         querystring_params = self.parse_query_string(request.params)
         available_fields = list(map(lambda x: '{}.{}'.format(x.parent.class_.__name__, x.name), filterable_fields))
@@ -122,7 +123,7 @@ class FieldFilter(AttributeBaseFilter):
 
     def build_comparision(self, field, value):
         # Support "IN" filtering
-        return or_([field == v for v in value.split(',')])
+        return or_(*[field == v for v in value.split(',')])
 
 
 class SearchFilter(AttributeBaseFilter):
