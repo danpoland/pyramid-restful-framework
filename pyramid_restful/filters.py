@@ -20,9 +20,12 @@ class AttributeBaseFilter(BaseFilter):
     the . path to attribute. WARNING: Every relationship in a . path is joined.
 
     query_string_lookup: The key to use when parsing the requests query string. The <key> in <key>[<field_name>]=<val>.
+    view_attribute_name: The attribute name used in the view that uses the filter that specifies which attributes
+                         can be filtered on.
     """
 
     query_string_lookup = None
+    view_attribute_name = None
 
     def parse_query_string(self, params):
         """
@@ -45,9 +48,10 @@ class AttributeBaseFilter(BaseFilter):
         if not view.filter_fields or not request.params:
             return query
 
+        filterable_fields = getattr(view, self.view_attribute_name)
         filter_list = []
         querystring_params = self.parse_query_string(request.params)
-        available_fields = list(map(lambda x: '{}.{}'.format(x.parent.class_.__name__, x.name), view.filter_fields))
+        available_fields = list(map(lambda x: '{}.{}'.format(x.parent.class_.__name__, x.name), filterable_fields))
 
         for key, val in querystring_params.items():
             attrs = key.split('.')  # Every item in the resulting array must be a relationship except for the last
@@ -82,7 +86,7 @@ class AttributeBaseFilter(BaseFilter):
                     if join_model not in joined_tables:
                         query = query.join(join_model)
 
-                filter_list.append(self.build_comparision(view.filter_fields[i], val))
+                filter_list.append(self.build_comparision(filterable_fields[i], val))
 
             query = query.filter(*filter_list)
 
@@ -104,6 +108,7 @@ class FieldFilter(AttributeBaseFilter):
     """
 
     query_string_lookup = 'filter'
+    view_attribute_name = 'filter_fields'
 
     def build_comparision(self, field, value):
         # Support "IN" filtering
@@ -116,6 +121,7 @@ class SearchFilter(AttributeBaseFilter):
     """
 
     query_string_lookup = 'search'
+    view_attribute_name = 'search_fields'
 
     def build_comparision(self, field, value):
         if issubclass(field.type.__class__, ARRAY):
