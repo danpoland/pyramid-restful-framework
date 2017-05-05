@@ -9,15 +9,16 @@ class ListModelMixin:
     """
 
     def list(self, request, *args, **kwargs):
-        query = self.filter_query(self.get_query())
+        # Execute the query to ensure unnecessary executions are made by schema or pagination
+        data = self.filter_query(self.get_query()).all()
         schema = self.get_schema()
-        page = self.paginate_query(query)
+        page = self.paginate_query(data)
 
         if page is not None:
             content = schema.dump(page, many=True)[0]
             return self.get_paginated_response(content)
 
-        content = schema.dump(query, many=True)[0]
+        content = schema.dump(data, many=True)[0]
         return Response(json=content)  # todo, hardcoded json here, need to implement parsers
 
 
