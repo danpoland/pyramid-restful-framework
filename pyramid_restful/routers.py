@@ -87,7 +87,18 @@ class ViewSetRouter:
         self.trailing_slash = trailing_slash and '/' or ''
         self.registry = list()
 
-    def register(self, prefix, viewset, basename):
+    def register(self, prefix, viewset, basename, factory=None, permission=None):
+        """
+        Factory and permission are likely only going to exist until I have enough time
+        to write a permissions module for PRF.
+
+        :param prefix: the uri route prefix.
+        :param viewset: The ViewSet class to route.
+        :param basename: Used to name the route in pyramid.
+        :param factory: Optional, root factory to be used as the context to the route.
+        :param permission: Optional, permission to assign the route.
+        :return:
+        """
         lookup = self.get_lookup(viewset)
         routes = self.get_routes(viewset)
 
@@ -106,8 +117,12 @@ class ViewSetRouter:
             view = viewset.as_view(mapping, **route.initkwargs)
             name = route.name.format(basename=basename)
 
-            self.configurator.add_route(name, url)
-            self.configurator.add_view(view, route_name=name)
+            if factory:
+                self.configurator.add_route(name, url, factory=factory)
+            else:
+                self.configurator.add_route(name, url)
+
+            self.configurator.add_view(view, route_name=name, permission=permission)
 
     def get_routes(self, viewset):
         """
