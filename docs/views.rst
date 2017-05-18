@@ -30,7 +30,7 @@ request would be routed to the class's ``post`` method::
             return Response(status=201)
 
 
-You route ``APIView``s similar to how you route typical views in pyramid. Below is an example ``routes.py`` file that
+You route ``APIView`` classes similar to how you route typical views in pyramid. Below is an example ``routes.py`` file that
 routes the view defined above::
 
     from . import views
