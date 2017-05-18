@@ -106,3 +106,24 @@ In some cases the default behavior might not meet your needs. In those cases you
             data, errors = schema.dump(rows)
             
             return Response(data)
+            
+API Reference
+=============
+
+**GenericAPIView**
+
+This class extends `APIView` adding commonly used functionality for basic list and detail views. Full fledged API views
+are constructed by combining ``GenericAPIView`` with mixin classes. A few concrete generic views are provided by PRF.
+
+**Attributes**
+
+Basics:
+    - ``model``:
+    - ``schema_class``:
+    - ``lookup_column``:
+
+Pagination:
+    - ``pagination_class``:
+
+Filtering:
+    - ``filter_classes``:
