@@ -40,3 +40,21 @@ routes the view defined above::
         config.add_view(views.UserView.as_view(), route_name='users')
 
 
+
+Any URL pattern matching variables used in the route definition will be passed to the view's method as a kwarg.
+::
+
+    class UserDetailView(ApiView):
+        """
+        Retrieve a specific User.
+        """
+
+        def get(self, request, id, *args, **kwargs):
+            user = request.dbsession.query(User).get(id)
+            return Response(json_body=user)
+
+
+
+    def includeme(config):
+        config.add_route('users', '/users/{id}/')
+        config.add_view(views.UserDetailView.as_view(), route_name='users')
