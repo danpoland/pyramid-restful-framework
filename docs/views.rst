@@ -118,12 +118,12 @@ are constructed by combining ``GenericAPIView`` with mixin classes. A few concre
 **Attributes**
 
 Basics:
-    - ``model``:
-    - ``schema_class``:
-    - ``lookup_column``:
+    - ``model``: The SQLAlchemy model that should be used for returning objects from the view. You must set this attribute or override the ``get_query`` method.
+    - ``schema_class``: The marshmallow Schema class to be used for validating and deserializing request data and for serializing response data.
+    - ``lookup_field``: The field on the model used to identify individual instance of an model. Defaults to ``'id'``.
 
 Pagination:
-    - ``pagination_class``:
+    - ``pagination_class``: The pagination class that is used to paginate list results. This defaults to the of the ``restful.default_pagination_class`` configuration, if set.
 
 Filtering:
-    - ``filter_classes``:
+    - ``filter_classes``: An iterable of classes that extend ``BaseFilter``. Filtering is pretty primative currently in PRF. Each class in the ``filter_classes`` iterable is passed the query used by the viewset before the query finally executed to produce the data for a response from the view.
