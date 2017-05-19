@@ -45,7 +45,7 @@ class AttributeBaseFilter(BaseFilter):
         return results
 
     def filter_query(self, request, query, view):
-        filterable_fields = getattr(view, self.view_attribute_name)
+        filterable_fields = getattr(view, self.view_attribute_name, None)
 
         if not filterable_fields or not request.params:
             return query
