@@ -89,7 +89,7 @@ class AttributeBaseFilter(BaseFilter):
 
                 filter_list.append(self.build_comparision(filterable_fields[i], val))
 
-            query = self.apply_filter(query, filter_list)
+        query = self.apply_filter(query, filter_list)
 
         return query
 
@@ -139,6 +139,9 @@ class SearchFilter(AttributeBaseFilter):
             return field.any(value.lower())
 
         return func.lower(field).like('%{}%'.format(value.lower()))
+
+    def apply_filter(self, query, filter_list):
+        return query.filter(or_(*filter_list))
 
 
 class OrderFilter(AttributeBaseFilter):
