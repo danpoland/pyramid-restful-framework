@@ -140,9 +140,9 @@ class SearchFilter(AttributeBaseFilter):
 
     def build_comparision(self, field, value):
         if issubclass(field.type.__class__, ARRAY):
-            return or_([field.any(v.lower()) for v in value.split(',')])
+            return or_(*[field.any(v.lower()) for v in value.split(',')])
 
-        return or_([func.lower(field).like('%{}%'.format(v.lower())) for v in value.split(',')])
+        return or_(*[func.lower(field).like('%{}%'.format(v.lower())) for v in value.split(',')])
 
     def apply_filter(self, query, filter_list):
         return query.filter(or_(*filter_list))
