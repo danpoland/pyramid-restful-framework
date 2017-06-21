@@ -27,7 +27,7 @@ class GenericAPIView(APIView):
     model = None  # SQLAlchemy model class
     schema_class = None  # marshmallow schema class
     filter_classes = ()
-    lookup_column = 'id'
+    lookup_field = 'id'
 
     def get_query(self):
         assert self.model is not None, (
@@ -45,17 +45,17 @@ class GenericAPIView(APIView):
         # an id field on the self.model, you can provide an alternative lookup as tuple of the model class
         # and a string of the column name.
 
-        if isinstance(self.lookup_column, str):
-            lookup_col = getattr(self.model, self.lookup_column)
-            lookup_val = self.lookup_url_kwargs[self.lookup_column]
+        if isinstance(self.lookup_field, str):
+            lookup_col = getattr(self.model, self.lookup_field)
+            lookup_val = self.lookup_url_kwargs[self.lookup_field]
         else:
-            assert isinstance(self.lookup_column, tuple), (
-                "'%s' `lookup_column` attribute should be a string or a tuple of (<model class>, `column`) "
+            assert isinstance(self.lookup_field, tuple), (
+                "'%s' `lookup_field` attribute should be a string or a tuple of (<model class>, `column`) "
                 % self.__class__.__name__
             )
 
-            lookup_col = getattr(self.lookup_column[0], self.lookup_column[1])
-            lookup_val = self.lookup_url_kwargs[self.lookup_column[1]]
+            lookup_col = getattr(self.lookup_field[0], self.lookup_field[1])
+            lookup_val = self.lookup_url_kwargs[self.lookup_field[1]]
 
         try:
             instance = query.filter(lookup_col == lookup_val).one()
