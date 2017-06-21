@@ -89,7 +89,7 @@ class AttributeBaseFilter(BaseFilter):
 
                 filter_list.append(self.build_comparision(filterable_fields[i], val))
 
-            query = self.apply_filter(query, filter_list)
+        query = self.apply_filter(query, filter_list)
 
         return query
 
@@ -116,6 +116,8 @@ class FieldFilter(AttributeBaseFilter):
     """
     Filters a query based on the filter_fields set on the view.
     filter_fields should be a list of SQLAlchemy Model columns.
+
+    Comma separated values are treated as ORs. Multiple filter[<field>] query params are AND'd together.
     """
 
     query_string_lookup = 'filter'
@@ -129,6 +131,8 @@ class FieldFilter(AttributeBaseFilter):
 class SearchFilter(AttributeBaseFilter):
     """
     Implements LIKE filtering based on the search[<field_name>]=<val> querystring.
+    Comma separated values are treated as ORs.
+    Multiple search[<fields>] are or'd together.
     """
 
     query_string_lookup = 'search'
@@ -136,9 +140,12 @@ class SearchFilter(AttributeBaseFilter):
 
     def build_comparision(self, field, value):
         if issubclass(field.type.__class__, ARRAY):
-            return field.any(value.lower())
+            return or_(*[field.any(v.lower()) for v in value.split(',')])
 
-        return func.lower(field).like('%{}%'.format(value.lower()))
+        return or_(*[func.lower(field).like('%{}%'.format(v.lower())) for v in value.split(',')])
+
+    def apply_filter(self, query, filter_list):
+        return query.filter(or_(*filter_list))
 
 
 class OrderFilter(AttributeBaseFilter):
