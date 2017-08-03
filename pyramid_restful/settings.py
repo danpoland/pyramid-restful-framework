@@ -8,11 +8,14 @@ DEFAULTS = {
     'default_pagination_class': 'pyramid_restful.pagination.PageNumberPagination',
     # Pagination
     'page_size': None,
+    # Permissions
+    'default_permission_classes': 'pyramid_restful.default_permission_classes'
 }
 
 # List of settings that may be in string import notation.
 IMPORT_STRINGS = (
     'default_pagination_class',
+    'default_permission_classes'
 )
 
 
