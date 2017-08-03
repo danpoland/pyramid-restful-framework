@@ -10,7 +10,7 @@ DEFAULTS = {
     # Pagination
     'page_size': None,
     # Permissions
-    'default_permission_classes': 'pyramid_restful.default_permission_classes'
+    'default_permission_classes': []
 }
 
 # List of settings that may be in string import notation.
