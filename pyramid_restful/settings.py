@@ -92,8 +92,6 @@ api_settings = APISettings(None, DEFAULTS, IMPORT_STRINGS)
 
 
 def reload_api_settings(settings, prefix='restful'):
-    import logging
-    logging.critical('MADE IT HERE SOME HOW')
     global api_settings
     app_settings = {}
 
