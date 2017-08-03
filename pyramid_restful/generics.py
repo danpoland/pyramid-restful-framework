@@ -1,7 +1,10 @@
 from .views import APIView
 
 from pyramid.httpexceptions import HTTPNotFound
+
 from sqlalchemy.orm.exc import NoResultFound
+
+from pyramid_restful.settings import api_settings
 
 from . import mixins
 
@@ -10,20 +13,12 @@ class GenericAPIView(APIView):
     """
     Provide default functionality for working with RESTFul endpoints.
     pagination_class can be overridden as a class attribute:
+
     class MyView(GenericAPIView):
         pagination_class = MyPager
     """
 
-    @property
-    def pagination_class(self):
-        if not hasattr(self, '_pagination_class'):
-            # make sure we have the most up to date settings
-            # Somebody please come up with something better
-            from pyramid_restful.settings import api_settings
-            self._pagination_class = api_settings.default_pagination_class
-
-        return self._pagination_class
-
+    pagination_class = api_settings.default_pagination_class
     model = None  # SQLAlchemy model class
     schema_class = None  # marshmallow schema class
     filter_classes = ()
@@ -61,6 +56,9 @@ class GenericAPIView(APIView):
             instance = query.filter(lookup_col == lookup_val).one()
         except NoResultFound:
             raise HTTPNotFound()
+
+        # May raise HTTPForbidden
+        self.check_object_permissions(self.request, instance)
 
         return instance
 

@@ -2,17 +2,21 @@ import six
 
 from importlib import import_module
 
+from pyramid.events import subscriber, ApplicationCreated
 
 DEFAULTS = {
     # Generic view behavior
     'default_pagination_class': 'pyramid_restful.pagination.PageNumberPagination',
     # Pagination
     'page_size': None,
+    # Permissions
+    'default_permission_classes': []
 }
 
 # List of settings that may be in string import notation.
 IMPORT_STRINGS = (
     'default_pagination_class',
+    'default_permission_classes'
 )
 
 
@@ -101,3 +105,11 @@ def reload_api_settings(settings, prefix='restful'):
             app_settings[setting_name] = val
 
     api_settings = APISettings(app_settings, DEFAULTS, IMPORT_STRINGS)
+
+
+@subscriber(ApplicationCreated)
+def application_created(app):
+    """
+    When a pyramid application is created re-create api_settings use the
+    """
+    reload_api_settings(app.settings)
