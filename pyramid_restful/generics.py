@@ -61,6 +61,9 @@ class GenericAPIView(APIView):
             instance = query.filter(lookup_col == lookup_val).one()
         except NoResultFound:
             raise HTTPNotFound()
+        
+        # May raise HTTPForbidden
+        self.check_object_permissions(self.request, instance)
 
         return instance
 
