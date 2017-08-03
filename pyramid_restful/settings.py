@@ -2,6 +2,7 @@ import six
 
 from importlib import import_module
 
+from pyramid.events import subscriber, ApplicationCreated
 
 DEFAULTS = {
     # Generic view behavior
@@ -104,3 +105,15 @@ def reload_api_settings(settings, prefix='restful'):
             app_settings[setting_name] = val
 
     api_settings = APISettings(app_settings, DEFAULTS, IMPORT_STRINGS)
+
+
+@subscriber(ApplicationCreated)
+def application_created(app):
+    """
+    When a pyramid application is created re-create api_settings use the
+    """
+
+    import logging
+    logging.error('-----------------------------')
+    logging.error(app)
+    reload_api_settings(app.settings)
