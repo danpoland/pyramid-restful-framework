@@ -92,6 +92,8 @@ api_settings = APISettings(None, DEFAULTS, IMPORT_STRINGS)
 
 
 def reload_api_settings(settings, prefix='restful'):
+    import logging
+    logging.critical('MADE IT HERE SOME HOW')
     global api_settings
     app_settings = {}
 
@@ -112,8 +114,4 @@ def application_created(app):
     """
     When a pyramid application is created re-create api_settings use the
     """
-
-    import logging
-    logging.error('-----------------------------')
-    logging.error(app)
     reload_api_settings(app.settings)
