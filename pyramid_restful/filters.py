@@ -45,13 +45,21 @@ class AttributeBaseFilter(BaseFilter):
         return results
 
     def filter_query(self, request, query, view):
-        filterable_fields = getattr(view, self.view_attribute_name, None)
-
-        if not filterable_fields or not request.params:
+        if not request.params:
             return query
 
-        filter_list = []
         querystring_params = self.parse_query_string(request.params)
+        query, filter_list = self.build_filter_list(querystring_params, query, view)
+
+        return self.apply_filter(query, filter_list)
+
+    def build_filter_list(self, querystring_params, query, view):
+        filterable_fields = getattr(view, self.view_attribute_name, None)
+
+        if not filterable_fields:
+            return query, []
+
+        filter_list = []
         available_fields = list(map(lambda x: '{}.{}'.format(x.parent.class_.__name__, x.name), filterable_fields))
 
         for key, val in querystring_params.items():
@@ -89,9 +97,7 @@ class AttributeBaseFilter(BaseFilter):
 
                 filter_list.append(self.build_comparision(filterable_fields[i], val))
 
-        query = self.apply_filter(query, filter_list)
-
-        return query
+        return query, filter_list
 
     def apply_filter(self, query, filter_list):
         """
