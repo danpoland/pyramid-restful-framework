@@ -18,7 +18,7 @@ install_requires = [
     'six',
     'pyramid',
     'sqlalchemy',
-    'marshmallow',
+    'marshmallow >= 2.14, < 3.0',
 ]
 
 tests_require = [
