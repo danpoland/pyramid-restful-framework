@@ -151,7 +151,7 @@ class GenericAPIViewTests(TestCase):
         view.request = self.request
         query = view.get_query()
         view.paginate_query(query)
-        view.paginator.paginate_query.assert_called_once()
+        assert view.paginator.paginate_query.call_count == 1
 
     def test_no_paginator(self):
         view = UserOverrideView()
@@ -163,7 +163,7 @@ class GenericAPIViewTests(TestCase):
         view = UserAPIView()
         view.request = self.request
         view.get_paginated_response({})
-        view.paginator.get_paginated_response.assert_called_once()
+        assert view.paginator.get_paginated_response.call_count == 1
 
 
 class ConcreteGenericAPIViewsTest(TestCase):

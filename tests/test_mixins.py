@@ -1,3 +1,4 @@
+import json
 from unittest import TestCase, mock
 
 import marshmallow as ma
@@ -24,7 +25,14 @@ class MockAPIView:
     ]
 
     def get_query(self):
-        ret = []
+        class MockQuery(list):
+            def __init__(self, *args):
+                super().__init__(*args)
+
+            def all(self):
+                return self
+
+        ret = MockQuery()
 
         for data in self.dataset:
             instance = mock.Mock()
@@ -98,7 +106,7 @@ class ModelMixinUnitTests(TestCase):
         view = ListViewTest()
         response = view.list(self.request)
         assert response.status_code == 200
-        assert response.body == b'[{"id":1,"name":"testing"}]'
+        assert json.loads(response.body.decode('utf-8')) == [{"id": 1, "name": "testing"}]
 
     def test_list_mixin_no_page(self):
         class ListViewTest(mixins.ListModelMixin, MockAPIViewNoPage):
@@ -107,7 +115,9 @@ class ModelMixinUnitTests(TestCase):
         view = ListViewTest()
         response = view.list(self.request)
         assert response.status_code == 200
-        assert response.body == b'[{"id":1,"name":"testing"},{"id":2,"name":"testing 2"}]'
+        assert json.loads(response.body.decode('utf-8')) == [
+            {"id": 1, "name": "testing"}, {"id": 2, "name": "testing 2"}
+        ]
 
     def test_retrieve_mixin(self):
         class RetrieveViewTest(mixins.RetrieveModelMixin, MockAPIView):
@@ -116,7 +126,7 @@ class ModelMixinUnitTests(TestCase):
         view = RetrieveViewTest()
         response = view.retrieve(self.request, id=1)
         assert response.status_code == 200
-        assert response.body == b'{"id":1,"name":"testing"}'
+        assert json.loads(response.body.decode('utf-8')) == {"id": 1, "name": "testing"}
 
     def test_create_mixin(self):
         class CreateViewTest(mixins.CreateModelMixin, MockAPIView):
@@ -127,8 +137,8 @@ class ModelMixinUnitTests(TestCase):
         self.request.json_body = {'id': 3, 'name': 'testing 3'}
         response = view.create(self.request)
         assert response.status_code == 201
-        assert response.body == b'{"id":3,"name":"testing 3"}'
-        self.request.dbsession.add.assert_called_once()
+        assert json.loads(response.body.decode('utf-8')) == {"id": 3, "name": "testing 3"}
+        assert self.request.dbsession.add.call_count == 1
 
     def test_bad_create_mixin(self):
         class CreateViewTest(mixins.CreateModelMixin, MockAPIView):
@@ -139,7 +149,7 @@ class ModelMixinUnitTests(TestCase):
         self.request.json_body = {'id': 4, 'name': 'testing 4'}
         response = view.create(self.request)
         assert response.status_code == 400
-        assert response.body == b'{"id":["invalid value."]}'
+        assert json.loads(response.body.decode('utf-8')) == {"id": ["invalid value."]}
 
     def test_update(self):
         class UpdateViewTest(mixins.UpdateModelMixin, MockAPIView):
@@ -149,7 +159,7 @@ class ModelMixinUnitTests(TestCase):
         self.request.json_body = {'id': 1, 'name': 'testing1'}
         response = view.update(self.request)
         assert response.status_code == 200
-        assert response.body == b'{"id":1,"name":"testing1"}'
+        assert json.loads(response.body.decode('utf-8')) == {"id": 1, "name": "testing1"}
 
     def test_bad_update(self):
         class UpdateViewTest(mixins.UpdateModelMixin, MockAPIView):
@@ -168,7 +178,7 @@ class ModelMixinUnitTests(TestCase):
         self.request.json_body = {'name': 'testing1'}
         response = view.partial_update(self.request)
         assert response.status_code == 200
-        assert response.body == b'{"id":1,"name":"testing1"}'
+        assert json.loads(response.body.decode('utf-8')) == {"id": 1, "name": "testing1"}
 
     def test_destroy(self):
         class DestroyViewTest(mixins.DestroyModelMixin, MockAPIView):
@@ -178,7 +188,7 @@ class ModelMixinUnitTests(TestCase):
         view.request = self.request
         response = view.destroy(self.request)
         assert response.status_code == 204
-        self.request.dbsession.delete.assert_called_once()
+        assert self.request.dbsession.delete.call_count == 1
 
 
 class TestActionSchemaMixin(TestCase):
