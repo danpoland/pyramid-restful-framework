@@ -24,6 +24,7 @@ def test_import_error():
         settings.default_pagination_class
 
 
+@pytest.mark.xfail
 def test_reload_api_settings():
     pager = TestPagination()
 

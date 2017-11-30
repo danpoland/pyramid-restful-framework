@@ -88,9 +88,12 @@ class GenericAPIView(APIView):
         klass = self.get_schema_class()
 
         # kwargs context value take precedence.
-        kwargs['context'] = {**self.get_schema_context(), **kwargs.get('context', {})}
+        kwargs['context'] = dict(
+            self.get_schema_context(),
+            **kwargs.get('context', {})
+        )
 
-        return klass(*args, **kwargs, strict=True)
+        return klass(*args, strict=True, **kwargs)
 
     def filter_query(self, query):
         """

@@ -88,7 +88,7 @@ class ModelViewSetTests(TestCase):
     def test_list(self):
         response = self.list_viewset(self.request)
         assert response.status_code == 200
-        assert json.loads(response.body) == [{"id": 1, "name": "testing"}, {"id": 2, "name": "testing 2"}]
+        assert json.loads(response.body.decode('utf-8')) == [{"id": 1, "name": "testing"}, {"id": 2, "name": "testing 2"}]
 
     def test_create(self):
         expected = {'id': 3, 'name': 'testing 3'}
@@ -96,14 +96,14 @@ class ModelViewSetTests(TestCase):
         self.request.method = 'POST'
         response = self.list_viewset(self.request)
         assert response.status_code == 201
-        assert json.loads(response.body) == expected
+        assert json.loads(response.body.decode('utf-8')) == expected
 
     def test_retrieve(self):
         expected = {'id': 1, 'name': 'testing'}
         self.request.matchdict['id'] = 1
         response = self.detail_viewset(self.request)
         assert response.status_code == 200
-        assert json.loads(response.body) == expected
+        assert json.loads(response.body.decode('utf-8')) == expected
 
     def test_object_does_not_exist(self):
         self.request.matchdict['id'] = 99
@@ -117,7 +117,7 @@ class ModelViewSetTests(TestCase):
         self.request.json_body = expected
         response = self.detail_viewset(self.request)
         assert response.status_code == 200
-        assert json.loads(response.body) == expected
+        assert json.loads(response.body.decode('utf-8')) == expected
 
     def test_partial_update(self):
         expected = {'id': 1, 'name': '1'}
@@ -126,7 +126,7 @@ class ModelViewSetTests(TestCase):
         self.request.json_body = {'name': '1'}
         response = self.detail_viewset(self.request)
         assert response.status_code == 200
-        assert json.loads(response.body) == expected
+        assert json.loads(response.body.decode('utf-8')) == expected
 
     def test_destroy(self):
         self.request.matchdict['id'] = 1
