@@ -37,7 +37,7 @@ class RetrieveModelMixin:
 
 class CreateModelMixin:
     """
-    Create object from serialized data
+    Create object from serialized data.
     """
 
     def create(self, request, *args, **kwargs):
@@ -55,7 +55,7 @@ class CreateModelMixin:
 
     def perform_create(self, data):
         """
-        Hook for controlling the creation of an model instance
+        Hook for controlling the creation of an model instance.
         """
 
         instance = self.model(**data)
@@ -99,7 +99,8 @@ class PartialUpdateMixin:
         schema = self.get_schema(context={'instance': instance})
 
         try:
-            data, errors = schema.load(request.json_body, partial=True)  # todo, hardcoded json here, need to implement parsers
+            data, errors = schema.load(request.json_body,
+                                       partial=True)  # todo, hardcoded json here, need to implement parsers
         except ma.ValidationError as err:
             return Response(json_body=err.messages, status=400)  # todo, hardcoded json here, need to implement parsers
 
@@ -130,9 +131,7 @@ class DestroyModelMixin:
 
 class ActionSchemaMixin:
     """
-    Allows you to use different schema depending on the
-    action being taken by the request.
-
+    Allows you to use different schema depending on the action being taken by the request.
     Defaults to the standard schema_class if no actions are specified.
     """
 

@@ -1,6 +1,8 @@
 from marshmallow import SchemaOpts, pre_dump
 
-__all__ = ['ExpandableSchemaMixin', 'ExpandableViewMixin', 'ExpandableOpts']
+__all__ = ['ExpandableSchemaMixin',
+           'ExpandableViewMixin',
+           'ExpandableOpts']
 
 
 class ExpandableOpts(SchemaOpts):
@@ -19,8 +21,7 @@ class ExpandableOpts(SchemaOpts):
 
 class ExpandableSchemaMixin:
     """
-    Supports optionally expandable fields based on QUERY_KEY query strings included in the
-    request's url.
+    Supports optionally expandable fields based on QUERY_KEY query strings included in the request's url.
     """
 
     OPTIONS_CLASS = ExpandableOpts
