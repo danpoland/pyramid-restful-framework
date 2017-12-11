@@ -47,7 +47,7 @@ def import_from_string(val, setting_name):
         module = import_module(module_path)
         return getattr(module, class_name)
     except (ImportError, AttributeError) as e:
-        msg = "Could not import '%s' for API setting '%s'. %s: %s." % (val, setting_name, e.__class__.__name__, e)
+        msg = "Could not import '{}' for API setting '{}'. {}: {}.".format(val, setting_name, e.__class__.__name__, e)
         raise ImportError(msg)
 
 
@@ -110,6 +110,7 @@ def reload_api_settings(settings, prefix='restful'):
 @subscriber(ApplicationCreated)
 def application_created(app):
     """
-    When a pyramid application is created re-create api_settings use the
+    When a pyramid application is created re-create api_settings.
     """
+
     reload_api_settings(app.settings)

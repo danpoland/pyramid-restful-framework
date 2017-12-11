@@ -1,11 +1,10 @@
-from .views import APIView
-
 from pyramid.httpexceptions import HTTPNotFound
 
 from sqlalchemy.orm.exc import NoResultFound
 
 from pyramid_restful.settings import api_settings
 
+from .views import APIView
 from . import mixins
 
 
@@ -26,9 +25,8 @@ class GenericAPIView(APIView):
 
     def get_query(self):
         assert self.model is not None, (
-            "'%s' should include a `model` attribute, "
-            "or override the `get_query()` method."
-            % self.__class__.__name__
+            "'{}' should include a `model` attribute, or override the `get_query()` method."
+            .format(self.__class__.__name__)
         )
 
         return self.request.dbsession.query(self.model)
@@ -45,8 +43,8 @@ class GenericAPIView(APIView):
             lookup_val = self.lookup_url_kwargs[self.lookup_field]
         else:
             assert isinstance(self.lookup_field, tuple), (
-                "'%s' `lookup_field` attribute should be a string or a tuple of (<model class>, `column`) "
-                % self.__class__.__name__
+                "'{}' `lookup_field` attribute should be a string or a tuple of (<model class>, `column`) "
+                .format(self.__class__.__name__)
             )
 
             lookup_col = getattr(self.lookup_field[0], self.lookup_field[1])
@@ -82,6 +80,7 @@ class GenericAPIView(APIView):
         """
         Extra context provided to the schema class.
         """
+
         return {'request': self.request}
 
     def get_schema(self, *args, **kwargs):
@@ -97,8 +96,7 @@ class GenericAPIView(APIView):
 
     def filter_query(self, query):
         """
-        Filter the given query using the filter classes specified on the view
-        if any are specified.
+        Filter the given query using the filter classes specified on the view if any are specified.
         """
 
         for filter_class in list(self.filter_classes):

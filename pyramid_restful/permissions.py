@@ -1,7 +1,6 @@
 class BasePermission:
     """
     All permission classes should inherit from this class.
-
     Override message to customize the message associated with the exception.
     """
 

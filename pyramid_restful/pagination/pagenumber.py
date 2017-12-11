@@ -296,4 +296,5 @@ class PageNumberPagination(BasePagination):
         For example if the app is behind a reverse proxy and you
         want to use the original host in the X-Forwarded-Host header.
         """
+
         return self.request.current_route_url()

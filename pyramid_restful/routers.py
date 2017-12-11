@@ -4,9 +4,7 @@ from collections import namedtuple
 
 from .exceptions import ImproperlyConfigured
 
-
 __all__ = ['ViewSetRouter']
-
 
 Route = namedtuple('Route', ['url', 'mapping', 'name', 'initkwargs'])
 DynamicDetailRoute = namedtuple('DynamicDetailRoute', ['url', 'name', 'initkwargs'])
@@ -15,8 +13,7 @@ DynamicListRoute = namedtuple('DynamicListRoute', ['url', 'name', 'initkwargs'])
 
 def replace_methodname(format_string, methodname):
     """
-    Partially format a format_string, swapping out any
-    '{methodname}' or '{methodnamehyphen}' components.
+    Partially format a format_string, swapping out any '{methodname}' or '{methodnamehyphen}' components.
     """
 
     methodnamehyphen = methodname.replace('_', '-')
@@ -37,7 +34,7 @@ def flatten(list_of_lists):
 class ViewSetRouter:
     """
     Automatically adds routes and associates views to the Pyramid Configurator for ViewSets, including
-    any list_routes and detail_routes.
+    any decorated list_routes and detail_routes.
     """
 
     routes = [
@@ -97,8 +94,8 @@ class ViewSetRouter:
         :param basename: Used to name the route in pyramid.
         :param factory: Optional, root factory to be used as the context to the route.
         :param permission: Optional, permission to assign the route.
-        :return:
         """
+
         lookup = self.get_lookup(viewset)
         routes = self.get_routes(viewset)
 
@@ -146,7 +143,7 @@ class ViewSetRouter:
                 if methodname in known_actions:
                     raise ImproperlyConfigured('Cannot use @detail_route or @list_route '
                                                'decorators on method "%s" '
-                                               'as it is an existing route' % methodname)
+                                               'as it is an existing route'.format(methodname))
 
                 httpmethods = [method.lower() for method in httpmethods]
 

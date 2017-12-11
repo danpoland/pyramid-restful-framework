@@ -102,6 +102,7 @@ class AttributeBaseFilter(BaseFilter):
     def apply_filter(self, query, filter_list):
         """
         Override this if you need to do something beside calling filter.
+
         :param query: the query that will be returned from the filter_query method.
         :param filter_list: An array of SQLAlchemy comparative statements.
         :return: The query
@@ -156,7 +157,7 @@ class SearchFilter(AttributeBaseFilter):
 
 class OrderFilter(AttributeBaseFilter):
     """"
-    Allow ordering of the query based on an order[<field>]=<asc | desc> query string.
+    Allow ordering of the query based on an order[<field>]=<asc || desc> query string.
     """
 
     query_string_lookup = 'order'

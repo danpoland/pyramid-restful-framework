@@ -88,9 +88,7 @@ class APIView:
 
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
-                self.permission_denied(
-                    request, message=getattr(permission, 'message', None)
-                )
+                self.permission_denied(request, message=getattr(permission, 'message', None))
 
     def check_object_permissions(self, request, obj):
         """
@@ -100,9 +98,7 @@ class APIView:
 
         for permission in self.get_permissions():
             if not permission.has_object_permission(request, self, obj):
-                self.permission_denied(
-                    request, message=getattr(permission, 'message', None)
-                )
+                self.permission_denied(request, message=getattr(permission, 'message', None))
 
     def permission_denied(self, request, message):
         # Todo figure out how to determine if this is a authorization vs authentication error.
