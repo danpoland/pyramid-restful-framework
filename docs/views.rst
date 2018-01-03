@@ -66,7 +66,7 @@ GenericAPIView
 The key advantage of using class-based views is that it allows you to reuse common behavior across many views. PRF
 supplies you with a few pre-constructed views that provide commonly used functionality.
 
-The `GenericAPIView` class allows you quickly compose an API without while keeping your code DRY through class configuration
+The `GenericAPIView` class allows you quickly compose an API while keeping your code DRY through class configuration
 rather than redefining view logic every time you need it.
 
 **Examples**
