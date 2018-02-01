@@ -5,6 +5,25 @@ __all__ = ['ExpandableSchemaMixin',
            'ExpandableOpts']
 
 
+def parse_requested_expands(query_key, request):
+    """
+    Extracts the value of the expand query string parameter from a request.
+    Supports comma separated lists.
+
+    :param query_key: The name query string parameter.
+    :param request: Request instance.
+    :return: List of strings representing the values of the expand query string value.
+    """
+
+    requested_expands = []
+
+    for key, val in request.params.items():
+        if key == query_key:
+            requested_expands += val.split(',')
+
+    return requested_expands
+
+
 class ExpandableOpts(SchemaOpts):
     """
     Adds support for expandable_fields to Class Meta. `expandable_fields` should be a
@@ -32,7 +51,7 @@ class ExpandableSchemaMixin:
         request = self.context.get('request')
 
         if request:
-            requested_expands = list(val for key, val in request.params.items() if key == self.QUERY_KEY)
+            requested_expands = parse_requested_expands(self.QUERY_KEY, request)
             available_expands = self.opts.expandable_fields.keys()
 
             for field in requested_expands:
@@ -64,19 +83,13 @@ class ExpandableViewMixin:
         """
         If your query is more complicated than what is supported below, override this method.
         Don't forget to call super though.
-        The value of schema_class.QUERY_KEY supports comma separated lists.
         """
 
         query = super(ExpandableViewMixin, self).get_query()
         expandable_fields = getattr(self, 'expandable_fields', [])
-        query_key = self.schema_class.QUERY_KEY
 
         if expandable_fields:
-            requested_expands = []
-
-            for key, val in self.request.params.items():
-                if key == query_key:
-                    requested_expands += val.split(',')
+            requested_expands = parse_requested_expands(self.schema_class.QUERY_KEY, self.request)
 
             if requested_expands:
                 available_expands = self.expandable_fields.keys()
