@@ -50,8 +50,12 @@ class ExpandableViewMixin:
 
     column (required): The table column that represents the relationship to be expanded.
     outerjoin (optional): Whether or not to use an outer join when joining the relationship.
-    options (optional): kwargs passed to the constructed queries' options method.
+    options (optional): list passed to the constructed queries' options method.
 
+    Example:
+        expandable_fields = {
+            'author': {'column': Book.author, 'options': [joinedload(Book.author)]
+        }
     """
 
     expandable_fields = None
