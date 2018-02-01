@@ -35,7 +35,7 @@ class AccountView:
 class ExpandableAccountView(ExpandableViewMixin, AccountView):
     schema_class = AccountSchema
     expandable_fields = {'owner': {
-        'column': 'owner_id'
+        'join': 'owner_id'
     }}
 
 
@@ -82,8 +82,7 @@ class ExpandableViewTests(TestCase):
         request.params = {'expand': 'owner'}
         view = ExpandableAccountView()
         view.expandable_fields = {'owner': {
-            'column': 'owner_id',
-            'outerjoin': True
+            'outerjoin': 'owner_id',
         }}
         view.request = request
         query = view.get_query()
@@ -94,7 +93,7 @@ class ExpandableViewTests(TestCase):
         request.params = {'expand': 'owner'}
         view = ExpandableAccountView()
         view.expandable_fields = {'owner': {
-            'column': 'owner_id',
+            'join': 'owner_id',
             'options': {'preselect': True}
         }}
         view.request = request
