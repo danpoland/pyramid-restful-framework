@@ -100,7 +100,7 @@ class ExpandableViewMixin:
                     if name in available_expands:
                         field = self.expandable_fields[name]
 
-                        innerjoin = fild.get('join')
+                        innerjoin = feild.get('join')
                         outerjoin = field.get('outerjoin')
 
                         if innerjoin:
