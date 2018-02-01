@@ -64,6 +64,7 @@ class ExpandableViewMixin:
         """
         If your query is more complicated than what is supported below, override this method.
         Don't forget to call super though.
+        The value of schema_class.QUERY_KEY supports comma separated lists.
         """
 
         query = super(ExpandableViewMixin, self).get_query()
@@ -71,7 +72,11 @@ class ExpandableViewMixin:
         query_key = self.schema_class.QUERY_KEY
 
         if expandable_fields:
-            requested_expands = list(val for key, val in self.request.params.items() if key == query_key)
+            requested_expands = []
+
+            for key, val in self.request.params.items():
+                if key == query_key:
+                    requested_expands += val.split(',')
 
             if requested_expands:
                 available_expands = self.expandable_fields.keys()
