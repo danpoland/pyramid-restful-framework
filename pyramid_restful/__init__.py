@@ -1,6 +1,6 @@
 from .settings import reload_api_settings
 
-__version__ = '0.14.1'
+__version__ = '0.15.0'
 
 VERSION = __version__
 
