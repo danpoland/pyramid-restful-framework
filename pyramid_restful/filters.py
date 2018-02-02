@@ -30,7 +30,7 @@ class AttributeBaseFilter(BaseFilter):
     def parse_query_string(self, params):
         """
         Override this method if you need to support query string filter keys other than those in the
-        format of filter[<field_name>].
+        format of filter[<field_name>]. Maps query string values == 'null' to None.
 
         :return: dict
         """
@@ -40,7 +40,7 @@ class AttributeBaseFilter(BaseFilter):
             lookup_len = len(self.query_string_lookup) + 1
 
             if key[0:lookup_len] == '{}['.format(self.query_string_lookup) and key[-1] == ']':
-                results[key[lookup_len:-1]] = val
+                results[key[lookup_len:-1]] = val if val.lower() != 'null' else None
 
         return results
 
@@ -132,6 +132,9 @@ class FieldFilter(AttributeBaseFilter):
 
     def build_comparision(self, field, value):
         # Support "IN" filtering
+        if value is None:
+            return field == None
+
         return or_(*[field == v for v in value.split(',')])
 
 
@@ -146,6 +149,9 @@ class SearchFilter(AttributeBaseFilter):
     view_attribute_name = 'search_fields'
 
     def build_comparision(self, field, value):
+        if value is None:
+            return field == None
+
         if issubclass(field.type.__class__, ARRAY):
             return or_(*[field.any(v.lower()) for v in value.split(',')])
 
