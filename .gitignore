@@ -7,3 +7,4 @@ dist/
 !.gitignore
 !.travis.yml
 !.coveragerc
+*_build/
