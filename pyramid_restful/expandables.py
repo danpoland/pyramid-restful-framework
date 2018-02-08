@@ -5,6 +5,25 @@ __all__ = ['ExpandableSchemaMixin',
            'ExpandableOpts']
 
 
+def parse_requested_expands(query_key, request):
+    """
+    Extracts the value of the expand query string parameter from a request.
+    Supports comma separated lists.
+
+    :param query_key: The name query string parameter.
+    :param request: Request instance.
+    :return: List of strings representing the values of the expand query string value.
+    """
+
+    requested_expands = []
+
+    for key, val in request.params.items():
+        if key == query_key:
+            requested_expands += val.split(',')
+
+    return requested_expands
+
+
 class ExpandableOpts(SchemaOpts):
     """
     Adds support for expandable_fields to Class Meta. `expandable_fields` should be a
@@ -32,7 +51,7 @@ class ExpandableSchemaMixin:
         request = self.context.get('request')
 
         if request:
-            requested_expands = list(val for key, val in request.params.items() if key == self.QUERY_KEY)
+            requested_expands = parse_requested_expands(self.QUERY_KEY, request)
             available_expands = self.opts.expandable_fields.keys()
 
             for field in requested_expands:
@@ -48,10 +67,16 @@ class ExpandableViewMixin:
     `expandable_fields` should be a dict of key = the field name that is expandable
     and val = is a dict with the following keys:
 
-    column (required): The table column that represents the relationship to be expanded.
-    outerjoin (optional): Whether or not to use an outer join when joining the relationship.
-    options (optional): kwargs passed to the constructed queries' options method.
+    join (optional):        A table column to join() to the query.
+    outerjoin (optional):   A table column to outerjoin() to the query.
+    options (optional):     list passed to the constructed queries' options method. This is where you
+                            want to include the related objects to expand on. Without a value you here
+                            you will likely end up running lots of extra queries.
 
+    Example:
+        expandable_fields = {
+            'author': {'column': Book.author, 'options': [joinedload(Book.author)]
+        }
     """
 
     expandable_fields = None
@@ -64,10 +89,9 @@ class ExpandableViewMixin:
 
         query = super(ExpandableViewMixin, self).get_query()
         expandable_fields = getattr(self, 'expandable_fields', [])
-        query_key = self.schema_class.QUERY_KEY
 
         if expandable_fields:
-            requested_expands = list(val for key, val in self.request.params.items() if key == query_key)
+            requested_expands = parse_requested_expands(self.schema_class.QUERY_KEY, self.request)
 
             if requested_expands:
                 available_expands = self.expandable_fields.keys()
@@ -76,10 +100,13 @@ class ExpandableViewMixin:
                     if name in available_expands:
                         field = self.expandable_fields[name]
 
-                        if field.get('outerjoin', False):
-                            query = query.outerjoin(field['column'])
-                        else:
-                            query = query.join(field['column'])
+                        innerjoin = field.get('join')
+                        outerjoin = field.get('outerjoin')
+
+                        if innerjoin:
+                            query = query.join(innerjoin)
+                        elif outerjoin:
+                            query = query.outerjoin(outerjoin)
 
                         # Apply optional options
                         options = field.get('options')
