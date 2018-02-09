@@ -18,6 +18,8 @@ class APIView:
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
     lookup_url_kwargs = None
+    #: An iterable of permissions classes. Defaults to ``default_permission_classes`` from the pyramid_restful
+    #: configuration. Override this attribute to provide view specific permissions.
     permission_classes = api_settings.default_permission_classes
 
     def __init__(self, **kwargs):
@@ -40,8 +42,7 @@ class APIView:
         Runs anything that needs to occur prior to calling the method handler.
         """
 
-        # Ensure that the incoming request is permitted
-        self.check_permissions(request)
+        self.check_permissions(request)  # Ensure that the incoming request is permitted
 
     def dispatch(self, request, *args, **kwargs):
         try:

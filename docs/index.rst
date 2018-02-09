@@ -22,10 +22,12 @@ This section contains a high level overview of Pyramid Restful Framework (PRF).
 Its meant to highlight all the features of PRF and how to use them
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    user/quickstart
+   user/configuration
    user/views
+   user/generics
 
 
 API
