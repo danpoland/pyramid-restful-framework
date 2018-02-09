@@ -1,13 +1,14 @@
 Views
-=====
+-----
 
 .. module:: pyramid_restful.views
+
 .. autoclass:: APIView
     :members:
 
-
 Generics
-========
+--------
+
 .. module:: pyramid_restful.generics
 
 .. autoclass:: GenericAPIView

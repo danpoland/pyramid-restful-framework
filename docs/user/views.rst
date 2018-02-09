@@ -61,7 +61,7 @@ Any URL pattern matching variables used in the route definition will be passed t
 
 
 Permissions
---------------
+-----------
 
 The ``permission_classes`` class attribute on ``ApiView`` controls which permissions are applied to incoming requests.
 By default ``permission_classes`` is set to the value of the configuration variable ``default_permission_classes``. See
