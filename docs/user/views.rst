@@ -1,4 +1,4 @@
-APIView
+Views
 =======
 
 The ``APIView`` serves as the base class for all views in PRF. It replaces the function based views often used
@@ -61,7 +61,7 @@ Any URL pattern matching variables used in the route definition will be passed t
 
 
 GenericAPIView
-==============
+--------------
 
 The key advantage of using class-based views is that it allows you to reuse common behavior across many views. PRF
 supplies you with a few pre-constructed views that provide commonly used functionality.
@@ -108,7 +108,7 @@ In some cases the default behavior might not meet your needs. In those cases you
             return Response(data)
             
 API Reference
-=============
+-------------
 
 **GenericAPIView**
 

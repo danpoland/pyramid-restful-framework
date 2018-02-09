@@ -84,6 +84,8 @@ class APIView:
         """
         Check if the request should be permitted.
         Raises an appropriate exception if the request is not permitted.
+
+        :param request: Pyramid Request object.
         """
 
         for permission in self.get_permissions():
@@ -94,6 +96,9 @@ class APIView:
         """
         Check if the request should be permitted for a given object.
         Raises an appropriate exception if the request is not permitted.
+
+        :param request: Pyramid Request object.
+        :param obj: The SQLAlchemy model instance that permissions will be evaluated against.
         """
 
         for permission in self.get_permissions():
