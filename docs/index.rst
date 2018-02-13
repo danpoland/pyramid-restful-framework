@@ -28,6 +28,7 @@ Its meant to highlight all the features of PRF and how to use them
    user/configuration
    user/views
    user/generics
+   user/viewsets
    user/permissions
 
 API Guide
