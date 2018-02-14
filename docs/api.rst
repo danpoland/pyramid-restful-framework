@@ -93,3 +93,13 @@ mixins
 
 .. autoclass:: ActionSchemaMixin
     :members:
+
+
+decorators
+----------
+
+.. module:: pyramid_restful.decorators
+
+.. autofunction:: detail_route
+
+.. autofunction:: list_route
