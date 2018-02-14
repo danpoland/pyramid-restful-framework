@@ -66,3 +66,30 @@ viewsets
 
 .. autoclass:: ModelCRUPDViewSet
     :members:
+
+
+mixins
+------
+
+.. module:: pyramid_restful.mixins
+
+.. autoclass:: ListModelMixin
+    :members:
+
+.. autoclass:: RetrieveModelMixin
+    :members:
+
+.. autoclass:: CreateModelMixin
+    :members:
+
+.. autoclass:: UpdateModelMixin
+    :members:
+
+.. autoclass:: PartialUpdateMixin
+    :members:
+
+.. autoclass:: DestroyModelMixin
+    :members:
+
+.. autoclass:: ActionSchemaMixin
+    :members:
