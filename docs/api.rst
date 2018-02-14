@@ -103,3 +103,12 @@ decorators
 .. autofunction:: detail_route
 
 .. autofunction:: list_route
+
+
+routers
+-------
+
+.. module:: pyramid_restful.routers
+
+.. autoclass:: ViewSetRouter
+    :members: register

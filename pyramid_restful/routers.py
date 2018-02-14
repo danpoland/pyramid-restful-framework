@@ -33,8 +33,8 @@ def flatten(list_of_lists):
 
 class ViewSetRouter:
     """
-    Automatically adds routes and associates views to the Pyramid Configurator for ViewSets, including
-    any decorated list_routes and detail_routes.
+    Automatically adds routes and associates views to the Pyramid ``Configurator`` for ViewSets, including
+    any decorated ``list_routes`` and ``detail_routes``.
     """
 
     routes = [
