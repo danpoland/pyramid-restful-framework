@@ -1,4 +1,4 @@
-Views
+views
 -----
 
 .. module:: pyramid_restful.views
@@ -6,7 +6,7 @@ Views
 .. autoclass:: APIView
     :members:
 
-Generics
+generics
 --------
 
 .. module:: pyramid_restful.generics
@@ -39,4 +39,30 @@ Generics
     :members:
 
 .. autoclass:: RetrieveUpdateDestroyAPIView
+    :members:
+
+viewsets
+--------
+
+.. module:: pyramid_restful.viewsets
+
+.. autoclass:: ViewSetMixin
+    :members:
+
+.. autoclass:: APIViewSet
+    :members:
+
+.. autoclass:: GenericAPIViewSet
+    :members:
+
+.. autoclass:: ReadOnlyModelViewSet
+    :members:
+
+.. autoclass:: ModelCRUDViewSet
+    :members:
+
+.. autoclass:: ModelCRPDViewSet
+    :members:
+
+.. autoclass:: ModelCRUPDViewSet
     :members:
