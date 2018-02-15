@@ -145,3 +145,15 @@ expandables
 
 .. autoclass:: ExpandableViewMixin
     :members:
+
+
+pagination
+----------
+
+.. module:: pyramid_restful.pagination
+
+.. autoclass:: PageNumberPagination
+    :members:
+
+.. autoclass:: LinkHeaderPagination
+    :members:

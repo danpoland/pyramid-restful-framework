@@ -195,11 +195,15 @@ class Page(Sequence):
 
 class PageNumberPagination(BasePagination):
     """
-    A simple page number based style that supports page numbers as
-    query parameters. For example:
-    http://api.example.org/accounts/?page=4
-    http://api.example.org/accounts/?page=4&page_size=100
-    page_size can be overridden as class attribute:
+    A simple page number based style that supports page numbers as query parameters.
+
+    For example::
+
+        http://api.example.org/accounts/?page=4
+        http://api.example.org/accounts/?page=4&page_size=100
+
+    page_size can be overridden as class attribute::
+
         class MyPager(PageNumberPagination):
             page_size = 10
     """

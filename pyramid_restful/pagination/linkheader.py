@@ -11,7 +11,9 @@ __all__ = ['LinkHeaderPagination']
 
 class LinkHeaderPagination(PageNumberPagination):
     """
-    DOC GOES HERE
+    Add a header field to responses called Link. The value of the Link header contains information about
+    traversing the paginated resource. For more information about link header pagination checkout
+    githhub's great explanation: https://developer.github.com/v3/guides/traversing-with-pagination/
     """
 
     def get_paginated_response(self, data):
