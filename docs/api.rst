@@ -133,3 +133,15 @@ filters
 
 .. autoclass:: OrderFilter
     :members:
+
+
+expandables
+-----------
+
+.. module:: pyramid_restful.expandables
+
+.. autoclass:: ExpandableSchemaMixin
+    :members:
+
+.. autoclass:: ExpandableViewMixin
+    :members:
