@@ -112,3 +112,24 @@ routers
 
 .. autoclass:: ViewSetRouter
     :members: register
+
+
+filters
+-------
+
+.. module:: pyramid_restful.filters
+
+.. autoclass:: BaseFilter
+    :members:
+
+.. autoclass:: AttributeBaseFilter
+    :members:
+
+.. autoclass:: FieldFilter
+    :members:
+
+.. autoclass:: SearchFilter
+    :members:
+
+.. autoclass:: OrderFilter
+    :members:
