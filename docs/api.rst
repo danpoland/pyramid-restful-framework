@@ -113,6 +113,13 @@ routers
 .. autoclass:: ViewSetRouter
     :members: register
 
+permissions
+-----------
+
+.. module:: pyramid_restful.permissions
+
+.. autoclass:: BasePermission
+    :members:
 
 filters
 -------
