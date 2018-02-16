@@ -15,12 +15,6 @@ using `SQLAlchemy <http://www.sqlalchemy.org/>`_ as an ORM and
 
 If you are familiar with django-rest-framework you should pick up pyramid-restful-framework very quickly.
 
-User Guide
-----------
-
-This section contains a high level overview of Pyramid Restful Framework (PRF).
-Its meant to highlight all the features of PRF and how to use them
-
 .. toctree::
    :caption: User Guide
 
@@ -31,11 +25,6 @@ Its meant to highlight all the features of PRF and how to use them
    user/viewsets
    user/permissions
    user/filters
-
-API Guide
----------
-
-This section describes the interface level details for the classes in PRF.
 
 .. toctree::
    :caption: API Guide
