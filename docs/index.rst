@@ -30,6 +30,7 @@ Its meant to highlight all the features of PRF and how to use them
    user/generics
    user/viewsets
    user/permissions
+   user/filters
 
 API Guide
 ---------

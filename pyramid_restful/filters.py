@@ -10,7 +10,10 @@ class BaseFilter:
         """
         This method must be overridden.
 
-        :return: The filtered query.
+        :param request: The request being processed.
+        :param query: The query to be filtered.
+        :param view: The view the filter is being applied to.
+        :return: The filtered ``query``.
         """
 
         raise NotImplementedError('.filter_query() must be implemented.')  # pragma: no cover
@@ -20,7 +23,7 @@ class AttributeBaseFilter(BaseFilter):
     """
     A base class for implementing filters on SQLAlchemy model attributes.
     Supports filtering a comma separated list using OR statements and relationship filter using
-    the . path to attribute. WARNING: Every relationship in a . path is joined.
+    the . path to attribute. WARNING: Every relationship in a ``.`` path is joined.
 
     Expects the query string parameters to be formatted as: ``key[field_name]=val``.
 
@@ -39,7 +42,8 @@ class AttributeBaseFilter(BaseFilter):
         Override this method if you need to support query string filter keys other than those in the
         format of ``key[field_name]=val``. Maps query string values == 'null' to ``None``.
 
-        :return: dictionary.
+        :param params: The query string parameters from ``request.params``.
+        :return: Dictionary.
         """
         results = {}
 
@@ -122,7 +126,7 @@ class AttributeBaseFilter(BaseFilter):
 
         :param query: the query that will be returned from the filter_query method.
         :param filter_list: An array of SQLAlchemy comparative statements.
-        :return: The query
+        :return: The query.
         """
 
         return query.filter(*filter_list)
@@ -166,7 +170,7 @@ class FieldFilter(AttributeBaseFilter):
 class SearchFilter(AttributeBaseFilter):
     """
     Implements LIKE filtering based on the search[field_name]=val querystring.
-    Comma separated values are treated as ORs. Multiple search[<fields>] are or'd together.
+    Comma separated values are treated as ORs. Multiple search[<fields>] are OR'd together.
 
     **Usage**::
 
