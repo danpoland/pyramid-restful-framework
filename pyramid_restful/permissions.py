@@ -8,15 +8,23 @@ class BasePermission:
 
     def has_permission(self, request, view):
         """
-        Return ``True`` if permission is granted else false. Checked on every request.
+        Checked on every request to a view. Return ``True`` if permission is granted else ``False``.
+
+        :param request: The request sent to the view.
+        :param view: The instance of the view being accessed.
+        :return: Boolean
         """
 
         return True
 
     def has_object_permission(self, request, view, obj):
         """
-        Return ``True`` if permission is granted else false. Checked when a request is for a specific
-        object.
+        Checked when a request is for a specific object. Return ``True`` if permission is granted else ``False``.
+
+        :param request: The request sent to the view.
+        :param view:  The instance of the view being accessed.
+        :param obj: The object being accessed.
+        :return: Boolean
         """
 
         return True
