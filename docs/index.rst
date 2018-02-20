@@ -25,6 +25,7 @@ If you are familiar with django-rest-framework you should pick up pyramid-restfu
    user/viewsets
    user/permissions
    user/filters
+   user/expandables
 
 .. toctree::
    :caption: API Guide
