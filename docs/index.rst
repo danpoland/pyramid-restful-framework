@@ -26,6 +26,7 @@ If you are familiar with django-rest-framework you should pick up pyramid-restfu
    user/permissions
    user/filters
    user/expandables
+   user/pagination
 
 .. toctree::
    :caption: API Guide

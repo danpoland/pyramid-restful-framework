@@ -154,10 +154,15 @@ expandables
     :members:
 
 
+.. _api-pagination-label:
+
 pagination
 ----------
 
 .. module:: pyramid_restful.pagination
+
+.. autoclass:: BasePagination
+    :members:
 
 .. autoclass:: PageNumberPagination
     :members:
