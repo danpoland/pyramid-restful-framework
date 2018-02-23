@@ -13,7 +13,7 @@ fine gained and explicit control over database queries and object serialization/
 using `SQLAlchemy <http://www.sqlalchemy.org/>`_ as an ORM and
 `marshmallow <https://github.com/marshmallow-code/marshmallow>`_ Schemas for object serialization and deserialization.
 
-To get the most out of this documentation, and PRF in general, it is recommended that you familiarize yourself with 
+To get the most out of this documentation, and PRF in general, it is recommended that you first familiarize yourself with 
 the following documentation:
 
 - `Pyramid <https://docs.pylonsproject.org/projects/pyramid/en/latest/>`_
