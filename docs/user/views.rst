@@ -6,8 +6,8 @@ in pyramid applications. Requests are passed to the view from the router and are
 with the same name as the HTTP method from the request. If the view class does not implement a method used by the request
 a 405 response is returned.
 
-For example, in the class definition below a **GET** request would routed the class's `get` method and a **POST**
-request would be routed to the class's ``post`` method::
+For example, in the class definition below a **GET** request would routed the class's ``get()`` method and a **POST**
+request would be routed to the class's ``post()`` method::
 
     from pyramid.response import Response
 

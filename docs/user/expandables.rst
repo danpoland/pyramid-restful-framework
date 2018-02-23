@@ -11,8 +11,8 @@ ExpandableViewMixin
 The ``ExpandableViewMixin`` allows you to dynamically control the joins executed by your view for each request. Using
 the ``expandable_fields`` class attribute you can configure query joins and options based on the values passed into the
 ``expand`` query string parameter. This allows you to avoid inadvertently executing extra queries to expand
-relationships for each object returned from your view. See the :doc:`../api` documentation for more information on
-using the the ``expandable_fields`` attribute.
+relationships for each object returned from your view. See the :ref:`epandables API <api-expandables.ExpandableViewMixin-label>`
+documentation for more information on using the ``expandable_fields`` attribute.
 
 Example::
 
@@ -34,13 +34,13 @@ Example::
 Using the example class above, a request with a query string of ``?expand=books`` would results in
 ``subqueryload(Author.books)`` being passed to the ``.options()`` method on the SQLAlchemy query executed by the view.
 This effectively pre-queries all the books related to the authors returned by the view so that the individual quries
-to retrieve the books are not executed for each author returned.
+to retrieve the books are not executed for each author returned when the authors are serialized.
 
 
 ExpandableSchemaMixin
 ---------------------
 
-The ``ExpandableSchemaMixin`` is a mixin class for ``marshmallow.Schema`` classes. It supports optionally included
+The ``ExpandableSchemaMixin`` is a mixin class for ``marshmallow.Schema`` classes. It supports optionally including
 ``Nested`` fields  based on the value of the query string parameters. The query string parameter's key is
 determined by the value of the ``QUERY_KEY`` class attribute.
 

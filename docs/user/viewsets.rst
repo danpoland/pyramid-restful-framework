@@ -41,7 +41,7 @@ Below we define a single ``APIViewSet`` that can be used to retrieve a single us
             return Response(json=content)
 
 
-To route this view in Pyramid we could bind the view into two different routes::
+To route this view in Pyramid we bind the view to two different routes::
 
     from . import views
 
@@ -51,7 +51,7 @@ To route this view in Pyramid we could bind the view into two different routes::
         config.add_view(views.UserViewSet.as_view({'get': 'list'}), route_name='user-list')
 
         config.add_route('user-detail', '/users/{id}/')
-        config.add_view(views.UserViewSet.as_view({'get': 'retrieve route_name='user-detail')
+        config.add_view(views.UserViewSet.as_view({'get': 'retrieve'}), route_name='user-detail')
 
 
 Typically you wont do this. Instead you would use the `ViewSetRouter` to configure the routes for you::
@@ -116,6 +116,7 @@ Example::
     from .models import User
     from .schemas import UserSchema
 
+
     class UserViewSet(ModelCRPDViewSet):
         model = User
         schema = UserSchema
@@ -128,7 +129,6 @@ Example::
                 raise HTTPNotFound()
 
             user.is_locked = True
-
             return Response(status=204)
 
         @list_route(methods=['get'])
@@ -163,18 +163,18 @@ add the action methods explicitly to the class. You can use the standard ``APIVi
 GenericAPIViewSet
 ^^^^^^^^^^^^^^^^^
 
-The ``GenericAPIViewSet`` class extends `GenericAPIView`` and does not provide any actions by default, but does
-include the base set of generic view behavior, such as the `get_object` and `get_query` methods. To use the class
-you will typically mixin the actions you need from the mixins module or write the action methods explicitly.
+The ``GenericAPIViewSet`` class extends ``GenericAPIView`` and does not provide any actions by default, but does
+include the base set of generic view behavior, such as the ``get_object()`` and ``get_query()`` methods. To use
+the class you will typically mixin the actions you need from the mixins module or write the action methods explicitly.
 
 
 The ModelViewSets
 ^^^^^^^^^^^^^^^^^
 
 PRF provide you with several ModelViewSet implementations. ModelViewSets are simply classes in which several
-action mixins are combined with GenericAPIViewSet. They provide all the functionality that comes with a
-``GenericAPIView``, such as the ``filter_classes`` and ``permission_classes`` attributes and well as the `get_query`
-and `get_object` methods. The base ModelViewSets provided by PRF along with their default actions are listed below:
+action mixins are combined with ``GenericAPIViewSet``. They provide all the functionality that comes with a
+``GenericAPIView``, such as the ``filter_classes`` and ``permission_classes`` attributes and well as the ``get_query()``
+and ``get_object()`` methods. The base ModelViewSets provided by PRF along with their default actions are listed below:
 
     - ReadOnlyModelViewSet: ``list()``, ``retrieve()``
     - ModelCRUDViewSet: ``list()``, ``create()``, ``retrieve()``, ``update()``, ``destroy()``
@@ -194,6 +194,7 @@ Example::
 
     from .models import User
     from .schema import UserSchema
+
 
     class UserViewSet(mixins.CreateModelMixin,
                       mixins.RetrieveModelMixin,

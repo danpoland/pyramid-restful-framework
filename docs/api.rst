@@ -6,6 +6,9 @@ views
 .. autoclass:: APIView
     :members:
 
+
+.. _api-generics-label:
+
 generics
 --------
 
@@ -142,6 +145,8 @@ filters
     :members:
 
 
+.. _api-expandables-label:
+
 expandables
 -----------
 
@@ -149,6 +154,8 @@ expandables
 
 .. autoclass:: ExpandableSchemaMixin
     :members:
+
+.. _api-expandables.ExpandableViewMixin-label:
 
 .. autoclass:: ExpandableViewMixin
     :members:

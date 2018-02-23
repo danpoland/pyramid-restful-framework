@@ -7,7 +7,7 @@ Currently there are three settings you can use to configure default behavior in 
 - **page_size**: An integer used as the default page size for pagination.
 - **default_permission_classes**: A list or tuple of strings. Each string represents the path to a permissions class to use by default with each view.
 
-If you used .. _pyramid-cookiecutter-restful: https://github.com/danpoland/pyramid-cookiecutter-restful to create
+If you used `pyramid-cookiecutter-restful <https://github.com/danpoland/pyramid-cookiecutter-restful>`_ to create
 your project you can simply update these values in the ``settings.__init__.py`` file in the ``PYRAMID_APP_SETTINGS``
 variable::
 

@@ -22,8 +22,8 @@ Typically when you use a generic view all you need to do is set some of the clas
         schema_class = UserSchema
 
 That's all it takes. This provides the same functionality as the ``UserView`` created using the ``APIView`` class
-in the :doc:`views` section. It provides two methods. One for GET requests, which returns all the Users, and one for POST requests, which
-allows you to add a new User.
+in the :doc:`views` section. It provides two methods. One for **GET** requests, which returns all the Users,
+and one for **POST** requests, which allows you to add a new User.
 
 In some cases the default behavior might not meet your needs. In those cases you can override the methods on the view class.
 ::
@@ -53,12 +53,12 @@ API Reference
 
 This class extends `APIView` adding commonly used functionality for basic list and detail views. Full fledged API views
 are constructed by combining ``GenericAPIView`` with mixin classes. A few concrete generic views are provided by PRF.
-For a full list of these classes see
+For a full list of these classes see the :ref:`Generics API <api-generics-label>` docs.
 
 **Attributes**
 
 Basics:
-    - ``model``: The SQLAlchemy model that should be used for returning objects from the view. You must set this attribute or override the ``get_query`` method.
+    - ``model``: The SQLAlchemy model that should be used for returning objects from the view. You must set this attribute or override the ``get_query()`` method.
     - ``schema_class``: The marshmallow Schema class to be used for validating and deserializing request data and for serializing response data.
     - ``lookup_field``: The field on the model used to identify individual instance of an model. Defaults to ``'id'``.
 

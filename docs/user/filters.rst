@@ -36,7 +36,7 @@ are transformed into their all lower-case representation before the comparision 
 
 For example given the the ``ViewSet`` definition below and a request with the url of
 ``https://api.mycoolapp.com/users/?search[email]=gmail,hotmail``. The ViewSet would filter the query of users with
-the a statement similar to: ``WHERE (user.email LIKE '%gmail%' OR  user.email LIKE '%hotmail%')``.
+the a statement similar to: ``WHERE (user.email LIKE '%gmail%' OR user.email LIKE '%hotmail%')``.
 
 .. code-block:: python
 
