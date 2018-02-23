@@ -1,2 +1,3 @@
-from .pagenumber import *
-from .linkheader import *
+from .base import BasePagination
+from .pagenumber import PageNumberPagination
+from .linkheader import LinkHeaderPagination
