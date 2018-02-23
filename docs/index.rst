@@ -13,7 +13,13 @@ fine gained and explicit control over database queries and object serialization/
 using `SQLAlchemy <http://www.sqlalchemy.org/>`_ as an ORM and
 `marshmallow <https://github.com/marshmallow-code/marshmallow>`_ Schemas for object serialization and deserialization.
 
-If you are familiar with django-rest-framework you should pick up pyramid-restful-framework very quickly.
+To get the most out of this documentation, and PRF in general, it is recommended that you familiarize yourself with 
+the following documentation:
+
+- `Pyramid <https://docs.pylonsproject.org/projects/pyramid/en/latest/>`_
+- `Django Rest Framework <http://www.django-rest-framework.org/#quickstart>`_
+- `SQLAlchemy <http://docs.sqlalchemy.org/en/latest/>`_
+- `Marshmallow <https://marshmallow.readthedocs.io/en/latest/>`_
 
 .. toctree::
    :caption: User Guide
