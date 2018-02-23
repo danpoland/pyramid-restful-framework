@@ -4,7 +4,7 @@ ViewSets
 A ViewSet is a class-based view that allows you to combine a set of related views into a single class. The most
 typical usage of ViewSets is to combine CRUD operations for a particular model in a single class. ViewSets allow you
 define methods that handle both detail and list operations in a single class. Unlike a ``APIView`` class that defines
-methods such as ``get()`` or ``post()``, a ``APIViewSet`` defines actions like ``retrive()`` and ``create()``.
+methods such as ``get()`` or ``post()``, an ``APIViewSet`` defines actions like ``retrive()`` and ``create()``.
 
 Example
 -------
