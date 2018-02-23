@@ -77,9 +77,11 @@ class Paginator:
         """
         Returns a Page object for the given 1-based page number.
         """
+
         number = self.validate_number(number)
         bottom = (number - 1) * self.per_page
         top = bottom + self.per_page
+
         if top + self.orphans >= self.count:
             top = self.count
         return self._get_page(self.object_list[bottom:top], number, self)
@@ -97,6 +99,7 @@ class Paginator:
         """
         Returns the total number of objects, across all pages.
         """
+
         try:
             return self.object_list.count()
         except (AttributeError, TypeError):
@@ -110,9 +113,12 @@ class Paginator:
         """
         Returns the total number of pages.
         """
+
         if self.count == 0 and not self.allow_empty_first_page:
             return 0
+
         hits = max(1, self.count - self.orphans)
+
         return int(ceil(hits / float(self.per_page)))
 
     @property
@@ -121,12 +127,14 @@ class Paginator:
         Returns a 1-based range of pages for iterating through within
         a template for loop.
         """
+
         return range(1, self.num_pages + 1)
 
     def _check_object_list_is_ordered(self):
         """
         Warn if self.object_list is unordered (typically a QuerySet).
         """
+
         if hasattr(self.object_list, 'ordered') and not self.object_list.ordered:
             warnings.warn(
                 'Pagination may yield inconsistent results with an unordered '
@@ -195,13 +203,35 @@ class Page(Sequence):
 
 class PageNumberPagination(BasePagination):
     """
-    A simple page number based style that supports page numbers as
-    query parameters. For example:
-    http://api.example.org/accounts/?page=4
-    http://api.example.org/accounts/?page=4&page_size=100
-    page_size can be overridden as class attribute:
+    A simple page number based style that supports page numbers as query parameters.
+
+    For example::
+
+        http://api.example.org/accounts/?page=4
+        http://api.example.org/accounts/?page=4&page_size=100
+
+    page_size can be overridden as class attribute::
+
         class MyPager(PageNumberPagination):
             page_size = 10
+
+
+    The resulting response JSON has four attributes, count, next, previous and results. Count indicates the
+    total number of objects before pagination. Next and previous contain URLs that can be used to retrieve the next
+    and previous pages of date respectively. The results attribute contains the list of objects that belong to page
+    of data.
+
+    Example::
+
+        {
+            'count': 50,
+            'next': 'app.myapp.com/api/users?page=3',
+            'previous': 'app.myapp.com/api/users?page=1',
+            'results': [
+                {id: 4, 'email': 'user4@myapp.com', 'name': 'John Doe'},
+                {id: 5, 'email': 'user5@myapp.com', 'name': 'Jan Doe'}
+            ]
+        }
     """
 
     page_size = api_settings.page_size

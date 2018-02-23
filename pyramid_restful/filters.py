@@ -3,13 +3,19 @@ from sqlalchemy import or_, ARRAY, func
 
 class BaseFilter:
     """
-    Base filter that all filter classes must implement.
+    Base interface that that all filter classes must implement.
     """
 
     def filter_query(self, request, query, view):
         """
-        Return the filter query.
+        This method must be overridden.
+
+        :param request: The request being processed.
+        :param query: The query to be filtered.
+        :param view: The view the filter is being applied to.
+        :return: The filtered ``query``.
         """
+
         raise NotImplementedError('.filter_query() must be implemented.')  # pragma: no cover
 
 
@@ -17,22 +23,27 @@ class AttributeBaseFilter(BaseFilter):
     """
     A base class for implementing filters on SQLAlchemy model attributes.
     Supports filtering a comma separated list using OR statements and relationship filter using
-    the . path to attribute. WARNING: Every relationship in a . path is joined.
+    the . path to attribute. WARNING: Every relationship in a ``.`` path is joined.
 
-    query_string_lookup: The key to use when parsing the requests query string. The <key> in <key>[<field_name>]=<val>.
-    view_attribute_name: The attribute name used in the view that uses the filter that specifies which attributes
-                         can be filtered on.
+    Expects the query string parameters to be formatted as: ``key[field_name]=val``.
+
+    Example: ``filter[email]=test@exmaple.com``
     """
 
+    #: The key to use when parsing the request's query string. The key in ``key[field_name]=val``.
     query_string_lookup = None
+
+    #: The name of the class attribute used in the view class that uses the filter that specifies
+    #: which fields can be filtered on.
     view_attribute_name = None
 
     def parse_query_string(self, params):
         """
         Override this method if you need to support query string filter keys other than those in the
-        format of filter[<field_name>]. Maps query string values == 'null' to None.
+        format of ``key[field_name]=val``. Maps query string values == 'null' to ``None``.
 
-        :return: dict
+        :param params: The query string parameters from ``request.params``.
+        :return: Dictionary.
         """
         results = {}
 
@@ -45,6 +56,16 @@ class AttributeBaseFilter(BaseFilter):
         return results
 
     def filter_query(self, request, query, view):
+        """
+        You may want to override this method if you want to add custom filtering to an ViewSet while still
+        utilizing the feature of the ``AttributeFilter`` implementation.
+
+        :param request: The pyramid ``Request`` instance.
+        :param query: The SQLAlchemy ``Query`` instance.
+        :param view: An instance of the view class that the filter has been applied to.
+        :return: The filtered query.
+        """
+
         if not request.params:
             return query
 
@@ -101,19 +122,19 @@ class AttributeBaseFilter(BaseFilter):
 
     def apply_filter(self, query, filter_list):
         """
-        Override this if you need to do something beside calling filter.
+        Override this if you need to do something beside calling filter on the query.
 
         :param query: the query that will be returned from the filter_query method.
         :param filter_list: An array of SQLAlchemy comparative statements.
-        :return: The query
+        :return: The query.
         """
 
         return query.filter(*filter_list)
 
     def build_comparision(self, field, value):
         """
-        Given the model field and the value to be filtered, this should return the statement to be appended
-        as a filter to the final query.
+        Must be overridden. Given the model field and the value to be filtered, this should return the statement
+        to be appended as a filter to the final query.
         """
 
         raise NotImplementedError
@@ -121,10 +142,18 @@ class AttributeBaseFilter(BaseFilter):
 
 class FieldFilter(AttributeBaseFilter):
     """
-    Filters a query based on the filter_fields set on the view.
-    filter_fields should be a list of SQLAlchemy Model columns.
+    Filters a query based on the ``filter_fields`` set on the view. ``filter_fields`` should be a
+    list of SQLAlchemy Model columns.
 
     Comma separated values are treated as ORs. Multiple filter[<field>] query params are AND'd together.
+
+    **Usage**::
+
+        class UserViewSet(ModelCRUDViewSet):
+            model = User
+            schema = UserSchema
+            filter_classes = (FieldFilter,)
+            filter_fields = (User.email, User.name,)
     """
 
     query_string_lookup = 'filter'
@@ -140,9 +169,16 @@ class FieldFilter(AttributeBaseFilter):
 
 class SearchFilter(AttributeBaseFilter):
     """
-    Implements LIKE filtering based on the search[<field_name>]=<val> querystring.
-    Comma separated values are treated as ORs.
-    Multiple search[<fields>] are or'd together.
+    Implements LIKE filtering based on the search[field_name]=val querystring.
+    Comma separated values are treated as ORs. Multiple search[<fields>] are OR'd together.
+
+    **Usage**::
+
+        class UserViewSet(ModelCRUDViewSet):
+            model = User
+            schema = UserSchema
+            filter_classes = (SearchFilter,)
+            filter_fields = (User.email, User.name,)
     """
 
     query_string_lookup = 'search'
@@ -162,8 +198,16 @@ class SearchFilter(AttributeBaseFilter):
 
 
 class OrderFilter(AttributeBaseFilter):
-    """"
-    Allow ordering of the query based on an order[<field>]=<asc || desc> query string.
+    """
+    Allow ordering of the query based on an order[field]=(asc || desc) query string.
+
+    **Usage**::
+
+        class UserViewSet(ModelCRUDViewSet):
+            model = User
+            schema = UserSchema
+            filter_classes = (OrderFilter,)
+            filter_fields = (User.created, User.name,)
     """
 
     query_string_lookup = 'order'

@@ -55,7 +55,8 @@ class CreateModelMixin:
 
     def perform_create(self, data):
         """
-        Hook for controlling the creation of an model instance.
+        Hook for controlling the creation of an model instance. Override this if you need to do more with your
+        data before saving your object than just mapping the deserialized data to a new instance of ``self.model``.
         """
 
         instance = self.model(**data)
@@ -84,7 +85,11 @@ class UpdateModelMixin:
         return Response(json=content)  # todo, hardcoded json here, need to implement parsers
 
     def perform_update(self, data, instance):
-        # todo circle back on this and possibly use straight update statement
+        """
+        Hook for controlling the update of an model instance. Override this if you need to do more with your
+        data before updating the object than just mapping the deserialized data to the attribute of the instance.
+        """
+
         for key, val in data.items():
             setattr(instance, key, val)
 
@@ -110,7 +115,11 @@ class PartialUpdateMixin:
         return Response(json=content)  # todo, hardcoded json here, need to implement parsers
 
     def perform_partial_update(self, data, instance):
-        # todo circle back on this and possibly use straight update statement
+        """
+        Hook for controlling the update of an model instance. Override this if you need to do more with your
+        data before updating the object than just mapping the deserialized data to the attribute of the instance.
+        """
+
         for key, val in data.items():
             setattr(instance, key, val)
 
@@ -126,6 +135,10 @@ class DestroyModelMixin:
         return Response(status=204)
 
     def perform_destroy(self, instance):
+        """
+        Hook for controlling the deletion of an model instance. Override this if you need to do more than just
+        delete the instance.
+        """
         self.request.dbsession.delete(instance)
 
 

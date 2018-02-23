@@ -18,6 +18,8 @@ class APIView:
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
     lookup_url_kwargs = None
+    #: An iterable of permissions classes. Defaults to ``default_permission_classes`` from the pyramid_restful
+    #: configuration. Override this attribute to provide view specific permissions.
     permission_classes = api_settings.default_permission_classes
 
     def __init__(self, **kwargs):
@@ -40,8 +42,7 @@ class APIView:
         Runs anything that needs to occur prior to calling the method handler.
         """
 
-        # Ensure that the incoming request is permitted
-        self.check_permissions(request)
+        self.check_permissions(request)  # Ensure that the incoming request is permitted
 
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -84,6 +85,8 @@ class APIView:
         """
         Check if the request should be permitted.
         Raises an appropriate exception if the request is not permitted.
+
+        :param request: Pyramid Request object.
         """
 
         for permission in self.get_permissions():
@@ -94,6 +97,9 @@ class APIView:
         """
         Check if the request should be permitted for a given object.
         Raises an appropriate exception if the request is not permitted.
+
+        :param request: Pyramid Request object.
+        :param obj: The SQLAlchemy model instance that permissions will be evaluated against.
         """
 
         for permission in self.get_permissions():
