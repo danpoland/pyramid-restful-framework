@@ -7,6 +7,8 @@ A RESTful API framework for Pyramid heavily influenced by [django-rest-framework
 
 This project was born from a desire to have DRF's view patterns on a lighter weight web framework and to replace Django's ORM with [SQLAlchemy](http://www.sqlalchemy.org/) and DRF Serializers with [marshmallow](https://github.com/marshmallow-code/marshmallow/) Schemas.
 
+[Read the docs]( http://pyramid-restful-framework.readthedocs.io/en/latest/) to learns more. 
+
 [build-status-image]: https://travis-ci.org/danpoland/pyramid-restful-framework.svg?branch=master
 [travis]: https://travis-ci.org/danpoland/pyramid-restful-framework
 [pypi-version]: https://badge.fury.io/py/pyramid-restful-framework.svg
