@@ -9,7 +9,7 @@ Pyramid Restful Framework's (PRF) documentation
 A RESTful API framework for Pyramid heavily influenced by `django-rest-framework <https://github.com/encode/django-rest-framework>`_.
 
 The goal of this project is to provide DRF's view patterns on a lighter weight web framework that grants you more
-fine gained and explicit control over database queries and object serialization/deserialization. This is accomplished
+fine grained and explicit control over database queries and object serialization/deserialization. This is accomplished
 using `SQLAlchemy <http://www.sqlalchemy.org/>`_ as an ORM and
 `marshmallow <https://github.com/marshmallow-code/marshmallow>`_ Schemas for object serialization and deserialization.
 

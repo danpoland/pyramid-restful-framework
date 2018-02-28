@@ -5,7 +5,8 @@
 # pyramid-restful-framework
 A RESTful API framework for Pyramid heavily influenced by [django-rest-framework](https://github.com/encode/django-rest-framework).
 
-This project was born from a desire to have DRF's view patterns on a lighter weight web framework and to replace Django's ORM with [SQLAlchemy](http://www.sqlalchemy.org/) and DRF Serializers with [marshmallow](https://github.com/marshmallow-code/marshmallow/) Schemas.
+The goal of this project is to provide DRF’s view patterns on a lighter weight web framework that grants you more fine 
+grained and explicit control over database queries and object serialization/deserialization. This is accomplished using [SQLAlchemy](http://www.sqlalchemy.org/) as an ORM and [marshmallow](https://github.com/marshmallow-code/marshmallow/) Schemas for object serialization and deserialization.
 
 [Read the docs]( http://pyramid-restful-framework.readthedocs.io/en/latest/) to learn more. 
 
