@@ -2,7 +2,7 @@ Permissions
 ===========
 
 PRF offers a single base class for writing your own permissions, ``BasePermission``. There are two methods that you
-must override, ``has_permission()`` and ``has_object_permission()``. The first is checked on every request to a view and
+can override, ``has_permission()`` and ``has_object_permission()``. The first is checked on every request to a view and
 the later is checked when a specific instance of an object is being accessed in a view.
 
 In the example below the request's authenticated user must be an admin::
