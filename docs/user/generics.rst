@@ -63,7 +63,7 @@ Basics:
     - ``lookup_field``: The field on the model used to identify individual instance of an model. Defaults to ``'id'``.
 
 Pagination:
-    - ``pagination_class``: The pagination class that is used to paginate list results. This defaults to the of the ``restful.default_pagination_class`` configuration, if set.
+    - ``pagination_class``: The pagination class that is used to paginate list results. This defaults to the value of the ``restful.default_pagination_class`` configuration, if set.
 
 Filtering:
     - ``filter_classes``: An iterable of classes that extend ``BaseFilter``. Filtering is pretty primative currently in PRF. Each class in the ``filter_classes`` iterable is passed the query used by the viewset before the query finally executed to produce the data for a response from the view.

@@ -64,5 +64,5 @@ Permissions
 -----------
 
 The ``permission_classes`` class attribute on ``ApiView`` controls which permissions are applied to incoming requests.
-By default ``permission_classes`` is set to the value of the configuration variable ``default_permission_classes``. See
+By default, ``permission_classes`` is set to the value of the configuration variable ``default_permission_classes``. See
 :doc:`configuration` and :doc:`permissions` for more details.
