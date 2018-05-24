@@ -11,7 +11,7 @@ request would be routed to the class's ``post()`` method::
 
     from pyramid.response import Response
 
-    from restful_framework.views import APIView
+    from pyramid_restful.views import APIView
 
     from .models import User
 
